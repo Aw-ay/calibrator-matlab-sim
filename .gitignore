@@ -11,3 +11,8 @@ Thumbs.db
 !/results/A_20260906_192845_354/
 !/results/B_20260906_192859_646/
 /results/acceptance/test_results.mat
+
+# 4gps 正式采样链最终验收输出
+!/results/A_20260906_220906_295/
+!/results/B_20260906_221221_083/
+!/results/ADC_RFDC_20260906_221225_188/

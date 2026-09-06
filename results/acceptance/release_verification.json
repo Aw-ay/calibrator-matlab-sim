@@ -1,0 +1,49 @@
+{
+  "branch": "4gps",
+  "repository": "https://github.com/Aw-ay/calibrator-matlab-sim",
+  "visibility": "public",
+  "matlab": "R2025a",
+  "automatic_tests": {
+    "total": 112,
+    "passed": 112,
+    "failed": 0,
+    "incomplete": 0
+  },
+  "code_analysis_diagnostics": 0,
+  "matlab_source_files": 144,
+  "style_violations": 0,
+  "review_open_critical_or_important": 0,
+  "A_range_error_m": 0.6532841176885995,
+  "B_range_error_m": 0.6441570803581271,
+  "ADC_relative_rms_error": 1.1656288990233644e-05,
+  "frontend": {
+    "input_fs_Hz": 500000000.0,
+    "output_fs_Hz": 62500000.0,
+    "layout": "clock x lane x H/V x range",
+    "samples_per_clock": 8,
+    "decimation": 8,
+    "fir_taps": 145,
+    "group_delay_s": 1.44e-07,
+    "input_samples": 1750000.0,
+    "output_samples": 218750,
+    "passband_ripple_dB": 0.0031085526273360144,
+    "stopband_attenuation_dB": 75.4947909141083
+  },
+  "artifacts": [
+    {
+      "directory": "results/A_20260906_220906_295",
+      "source_sha256_checked": 144,
+      "source_sha256_match": true
+    },
+    {
+      "directory": "results/B_20260906_221221_083",
+      "source_sha256_checked": 144,
+      "source_sha256_match": true
+    },
+    {
+      "directory": "results/ADC_RFDC_20260906_221225_188",
+      "source_sha256_checked": 144,
+      "source_sha256_match": true
+    }
+  ]
+}

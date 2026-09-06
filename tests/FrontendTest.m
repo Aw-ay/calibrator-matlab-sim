@@ -1,10 +1,11 @@
 classdef FrontendTest < matlab.unittest.TestCase
-    %FRONTENDTEST 数字前端基础模型的接口与边界测试
+    % FRONTENDTEST 数字前端基础模型的接口与边界测试
 
     methods (Test)
+
         function adcClipRoundUsesSignedFullScale(testCase)
             cfg = struct('bits', 4, 'full_scale', 1);
-            x = [-1.2-0.5i; -1+0i; 0.2+1.2i; 1+0i];
+            x = [-1.2 - 0.5i; -1 + 0i; 0.2 + 1.2i; 1 + 0i];
             [iCode, qCode, flags] = rtsim.rx.adc_clip_round(x, cfg);
             testCase.verifyEqual(iCode, int32([-8; -8; 2; 7]));
             testCase.verifyEqual(qCode, int32([-4; 0; 7; 0]));
@@ -113,12 +114,13 @@ classdef FrontendTest < matlab.unittest.TestCase
             testCase.verifyTrue(stamp.valid);
             testCase.verifyEqual(stamp.epoch_id, grid.epoch_id);
         end
+
     end
 end
 
 function grid = localGrid(gsc0, count)
-grid = struct('gsc0', gsc0, 'fraction0_ticks', 0, ...
-    'step_num', uint64(1), 'step_den', uint64(1), 'count', uint64(count), ...
-    'fs_Hz', 500e6, 'f_gsc_Hz', 500e6, 'epoch_id', "E0", ...
-    'clock_id', "C0", 'index0', uint64(0));
+    grid = struct('gsc0', gsc0, 'fraction0_ticks', 0, ...
+        'step_num', uint64(1), 'step_den', uint64(1), 'count', uint64(count), ...
+        'fs_Hz', 500e6, 'f_gsc_Hz', 500e6, 'epoch_id', "E0", ...
+        'clock_id', "C0", 'index0', uint64(0));
 end

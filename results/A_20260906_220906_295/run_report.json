@@ -1,0 +1,94 @@
+{
+  "stage": "A",
+  "created_at": "2026-09-06 22:09:06",
+  "model_scope": "ENVELOPE；理想方向图；频率平坦校准；块内冻结运动；行为级 bank/DMA",
+  "observables": {
+    "range_per_pulse_m": [
+      20000.653284117692,
+      20000.653284117667,
+      20000.6532841177,
+      20000.6532841177
+    ],
+    "range_m": 20000.653284117689,
+    "power_W": [
+      1.6436244195038604E-18,
+      1.6435913514133288E-18
+    ],
+    "ZDR_dB": 8.7376614413576181E-5,
+    "PhiDP_deg": 0.0031803211631760511,
+    "doppler_Hz": 0,
+    "velocity_mps": -0,
+    "rho_HV": 1,
+    "rho_scope": "仅确定性相干信号相关性，不构成随机天气相关系数验收",
+    "reflectivity_status": "NOT_APPLICABLE",
+    "range_kind": "当前门内表观距离"
+  },
+  "diagnostics": {
+    "rejected_replays": 0,
+    "dropped_captures": 0,
+    "bank_highwater": 1,
+    "dma_pending_bytes": 2.6867486013770758E-10,
+    "dma_completed_bytes": 28544.000000004296,
+    "tx_clipped_samples": 0,
+    "invalid_ranges": 0
+  },
+  "scores": {
+    "range_error_m": 0.65328411768859951,
+    "range_pass": true
+  },
+  "audit": {
+    "model": "假设复包络参考模型",
+    "profile": "RFSOC_SYSTEM_EQUIVALENT",
+    "project_root": "E:\\AWAY\\matlab\\calibrator_sim",
+    "pattern_status": "BLOCKED_MISSING_DATA",
+    "calibration_status": "SYNTHETIC_MEASUREMENTS",
+    "hardware_status": "BLOCKED_MISSING_DATA",
+    "missing": [
+      "实测全极化复方向图",
+      "独立实测 RX/TX 校准数据",
+      "精确板卡与 RTL 配置",
+      "原文 assets 图像"
+    ]
+  },
+  "latency_ledger": {
+    "physical_roundtrip_s": 1.3342563807926082E-5,
+    "virtual_roundtrip_s": 0.00013342563807926082,
+    "fixed_device_s": 1E-6,
+    "note": "物理采样标签扣FIR群延迟一次；可用时间保留FIR/EOP；命令先于目标TX固定流水时间"
+  },
+  "phase_ledger": {
+    "propagation": "每条单程路径产生 -2*pi*fc*tau",
+    "replay": "目标相位减已建模相位；独立多普勒减估计物理多普勒",
+    "motion": "短块冻结几何近似，非完整连续光行时闭环"
+  },
+  "sampling": {
+    "adc_real_Hz": 4.0E+9,
+    "rfdc_complex_Hz": 5.0E+8,
+    "rfdc_spc": 8,
+    "pl_clock_Hz": 6.25E+7,
+    "pl_decimation": 8,
+    "core_complex_Hz": 6.25E+7,
+    "core_spc": 1,
+    "usable_baseband_Hz": 2.0E+7
+  },
+  "radar_limits": {
+    "prf_Hz": 1000,
+    "unambiguous_range_m": 149896.229,
+    "nyquist_velocity_mps": 26.767183749999997,
+    "range_resolution_m": 149.896229,
+    "sample_grid_m": 2.398339664
+  },
+  "frontend": {
+    "input_fs_Hz": 5.0E+8,
+    "output_fs_Hz": 6.25E+7,
+    "layout": "clock x lane x H/V x range",
+    "samples_per_clock": 8,
+    "decimation": 8,
+    "fir_taps": 145,
+    "group_delay_s": 1.44E-7,
+    "input_samples": 1.75E+6,
+    "output_samples": 218750,
+    "passband_ripple_dB": 0.0031085526273360144,
+    "stopband_attenuation_dB": 75.4947909141083
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "matlab_files": 144,
+  "encoding": "UTF-8",
+  "newline": "LF",
+  "indent_spaces": 4,
+  "max_line_length": 120,
+  "violations": [],
+  "miss_hit_version": "0.9.44",
+  "miss_hit_result": "PASS"
+}

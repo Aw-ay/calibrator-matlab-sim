@@ -1,13 +1,17 @@
 classdef CalibrationAirborneTest < matlab.unittest.TestCase
     % 校准与机载适配器的行为契约测试
+
     methods (TestClassSetup)
+
         function addProjectPath(~)
             root = fileparts(fileparts(mfilename('fullpath')));
             addpath(root);
         end
+
     end
 
     methods (Test)
+
         function calibrationRecoversThreeRxRangesAndTx(testCase)
             plant.rx_response = cat(3, [2 0.1; 0.2 1.5], ...
                 [1.2 0.05; -0.1 0.9], [0.7 0.02; 0.03 0.6]);
@@ -27,9 +31,10 @@ classdef CalibrationAirborneTest < matlab.unittest.TestCase
             testCase.verifyEqual(rx.status, "OK");
             testCase.verifyEqual(tx.status, "OK");
             for k = 1:3
-                testCase.verifyEqual(rx.coefficients(:,:,k) * ...
-                    plant.rx_response(:,:,k), eye(2), 'AbsTol', 1e-11);
+                testCase.verifyEqual(rx.coefficients(:, :, k) * ...
+                    plant.rx_response(:, :, k), eye(2), 'AbsTol', 1e-11);
             end
+
             testCase.verifyEqual(tx.coefficients * plant.tx_response, ...
                 eye(2), 'AbsTol', 1e-11);
         end
@@ -63,7 +68,7 @@ classdef CalibrationAirborneTest < matlab.unittest.TestCase
         end
 
         function applyAndHoldoutValidationUseOnlyEstimatedSet(testCase)
-            calRx.coefficients = cat(3, eye(2), 2*eye(2), 3*eye(2));
+            calRx.coefficients = cat(3, eye(2), 2 * eye(2), 3 * eye(2));
             calRx.id = "rx-test";
             calTx.coefficients = [2 0; 0 3];
             calTx.id = "tx-test";
@@ -82,7 +87,7 @@ classdef CalibrationAirborneTest < matlab.unittest.TestCase
             holdout.rx(3) = holdout.rx(1);
             holdout.tx = holdout.rx(1);
             report = rtsim.calibration.validate_calibration( ...
-                struct('rx', struct('coefficients', repmat(eye(2),1,1,3)), ...
+                struct('rx', struct('coefficients', repmat(eye(2), 1, 1, 3)), ...
                 'tx', struct('coefficients', eye(2))), holdout, ...
                 struct('max_rmse', 1e-12));
             testCase.verifyTrue(report.pass);
@@ -127,15 +132,15 @@ classdef CalibrationAirborneTest < matlab.unittest.TestCase
         end
 
         function navigationPreservesColumnVectorContract(testCase)
-            truth = struct('time_s', 1, 'position_m', [10;20;30], ...
-                'velocity_mps', [1;2;3], 'roll_deg', 0);
-            cfg = struct('delay_s', 0, 'position_bias_m', [1;1;1], ...
-                'velocity_bias_mps', [2;2;2], 'roll_bias_deg', 0, ...
+            truth = struct('time_s', 1, 'position_m', [10; 20; 30], ...
+                'velocity_mps', [1; 2; 3], 'roll_deg', 0);
+            cfg = struct('delay_s', 0, 'position_bias_m', [1; 1; 1], ...
+                'velocity_bias_mps', [2; 2; 2], 'roll_bias_deg', 0, ...
                 'noise_std_m', 0, 'available', true);
             obs = rtsim.airborne.nav_sensor_step(truth, struct(), cfg);
             testCase.verifySize(obs.position_m, [3 1]);
             testCase.verifySize(obs.velocity_mps, [3 1]);
-            testCase.verifyEqual(obs.position_m, [11;21;31]);
+            testCase.verifyEqual(obs.position_m, [11; 21; 31]);
         end
 
         function firstOrderAirModelsAndIndependentScatterAreExplicit(testCase)
@@ -183,5 +188,6 @@ classdef CalibrationAirborneTest < matlab.unittest.TestCase
             testCase.verifyEqual(plantBoundary.position_m, [1 0 0]);
             testCase.verifyEqual(measuredBoundary.position_m, [2 0 0]);
         end
+
     end
 end

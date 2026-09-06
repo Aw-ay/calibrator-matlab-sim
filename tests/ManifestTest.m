@@ -1,19 +1,22 @@
 classdef ManifestTest < matlab.unittest.TestCase
-    %MANIFESTTEST 可重复运行清单和文件哈希测试
+    % MANIFESTTEST 可重复运行清单和文件哈希测试
 
     properties
         Root
     end
 
     methods (TestMethodSetup)
+
         function makeWorkspace(testCase)
             testCase.Root = tempname;
             mkdir(testCase.Root);
             testCase.addTeardown(@() rmdir(testCase.Root, 's'));
         end
+
     end
 
     methods (Test)
+
         function sameContentHasSameHashAndWritesJson(testCase)
             a = fullfile(testCase.Root, 'a.m');
             b = fullfile(testCase.Root, 'b.dat');
@@ -54,8 +57,8 @@ classdef ManifestTest < matlab.unittest.TestCase
         end
 
         function nestedComplexValuesAreReversiblyEncoded(testCase)
-            cfg = struct('rx_response', [1+2i 3-4i; -5i 6], ...
-                'nested', struct('items', {{7+8i, struct('polar', [9-10i; 11+12i])}}));
+            cfg = struct('rx_response', [1 + 2i 3 - 4i; -5i 6], ...
+                'nested', struct('items', {{7 + 8i, struct('polar', [9 - 10i; 11 + 12i])}}));
             files = struct('paths', {{}}, 'out_dir', fullfile(testCase.Root, 'out'), ...
                 'project_root', testCase.Root);
             manifest = rtsim.verification.write_run_manifest(cfg, files, struct(), struct(), struct());
@@ -65,15 +68,16 @@ classdef ManifestTest < matlab.unittest.TestCase
             testCase.verifyEqual(manifest.configuration.rx_response.size, size(cfg.rx_response));
             decoded = jsondecode(fileread(fullfile(testCase.Root, 'out', 'run_manifest.json')));
             encoded = decoded.configuration.nested.items{2}.polar;
-            restored = reshape(encoded.real + 1i*encoded.imag, encoded.size.');
+            restored = reshape(encoded.real + 1i * encoded.imag, encoded.size.');
             testCase.verifyEqual(restored, cfg.nested.items{2}.polar);
         end
+
     end
 end
 
 function localWrite(path, text)
-fid = fopen(path, 'wb');
-assert(fid >= 0);
-cleanup = onCleanup(@() fclose(fid));
-fwrite(fid, unicode2native(char(text), 'UTF-8'), 'uint8');
+    fid = fopen(path, 'wb');
+    assert(fid >= 0);
+    cleanup = onCleanup(@() fclose(fid));
+    fwrite(fid, unicode2native(char(text), 'UTF-8'), 'uint8');
 end

@@ -1,26 +1,66 @@
 function outDir = save_result(result)
-% 每次运行创建独立目录，保存波形、元数据、PDW、中文报告和图片。
-stamp=char(datetime('now','Format','yyyyMMdd_HHmmss_SSS'));
-outDir=fullfile(result.config.output.root,[result.stage,'_',stamp]);
-if ~exist(outDir,'dir'), mkdir(outDir); end
-save(fullfile(outDir,'result.mat'),'result','-v7.3');
-if ~isempty(result.pdw), writetable(struct2table(result.pdw),fullfile(outDir,'pdw.csv'),'Encoding','UTF-8'); end
-report=struct('stage',result.stage,'created_at',result.created_at,'model_scope',result.model_scope, ...
-    'observables',result.observables,'diagnostics',result.diagnostics,'scores',result.scores, ...
-    'audit',result.audit,'latency_ledger',result.latency_ledger,'phase_ledger',result.phase_ledger);
-root=fileparts(fileparts(fileparts(mfilename('fullpath'))));
-sources=dir(fullfile(root,'**','*.m')); sourcePaths=fullfile({sources.folder},{sources.name});
-files=struct('paths',{sourcePaths},'project_root',root,'out_dir',outDir);
-rtsim.verification.write_run_manifest(result.config,files,struct('matlab',version), ...
-    struct('scenario',result.config.seed,'calibration_train',result.config.seed+1,'calibration_holdout',result.config.seed+2),report);
-fid=fopen(fullfile(outDir,'run_report.json'),'w','n','UTF-8');
-assert(fid>=0,'rtsim:Output','无法创建报告文件。'); closer=onCleanup(@() fclose(fid));
-fprintf(fid,'%s',jsonencode(report,'PrettyPrint',true)); clear closer
-fid=fopen(fullfile(outDir,'运行报告.md'),'w','n','UTF-8'); closer=onCleanup(@() fclose(fid));
-fprintf(fid,'# 阶段 %s 仿真运行报告\n\n模型：%s\n\n',result.stage,result.model_scope);
-fprintf(fid,'目标距离：%.3f m；估计距离：%.3f m；误差：%.3f m。\n\n',result.config.target.range_m,result.observables.range_m,result.scores.range_error_m);
-fprintf(fid,'检测脉冲：%d；拒绝回放：%d；捕获丢失：%d；DMA 待传：%.0f 字节。\n\n',numel(result.pdw),result.diagnostics.rejected_replays,result.diagnostics.dropped_captures,result.diagnostics.dma_pending_bytes);
-fprintf(fid,'结果仅用于算法参考。实测复方向图、板卡精确配置与实测校准资料缺失，对应资格为 BLOCKED_MISSING_DATA。\n');
-clear closer
-rtsim.verification.plot_result(result,fullfile(outDir,'仿真结果.png'));
+    % 每次运行创建独立目录，保存波形、元数据、PDW、中文报告和图片。
+
+    stamp = char(datetime('now', 'Format', 'yyyyMMdd_HHmmss_SSS'));
+    outDir = fullfile(result.config.output.root, [result.stage, '_', stamp]);
+    if ~exist(outDir, 'dir')
+        mkdir(outDir);
+    end
+
+    save(fullfile(outDir, 'result.mat'), 'result', '-v7.3');
+    if ~isempty(result.pdw)
+        writetable(struct2table(result.pdw), fullfile(outDir, 'pdw.csv'), 'Encoding', 'UTF-8');
+    end
+
+    report = struct('stage', result.stage, 'created_at', result.created_at, 'model_scope', result.model_scope, ...
+        'observables', result.observables, 'diagnostics', result.diagnostics, 'scores', result.scores, ...
+        'audit', result.audit, 'latency_ledger', result.latency_ledger, 'phase_ledger', result.phase_ledger);
+    % 分开记录带宽、采样率和接口时钟，避免把采样栅格误读成距离分辨率。
+    cfg = result.config;
+    report.sampling = struct('adc_real_Hz', cfg.adc.fs_real_Hz, ...
+        'rfdc_complex_Hz', cfg.rfdc.output_fs_Hz, 'rfdc_spc', cfg.rfdc.samples_per_clock, ...
+        'pl_clock_Hz', cfg.rfdc.interface_clock_Hz, 'pl_decimation', cfg.pl.decimation, ...
+        'core_complex_Hz', cfg.pl.output_fs_Hz, 'core_spc', cfg.pl.output_samples_per_clock, ...
+        'usable_baseband_Hz', cfg.baseband.usable_bandwidth_Hz);
+    report.radar_limits = struct('prf_Hz', 1 / cfg.radar.pri_s, ...
+        'unambiguous_range_m', 299792458 * cfg.radar.pri_s / 2, ...
+        'nyquist_velocity_mps', 299792458 / cfg.rf.fc_Hz / cfg.radar.pri_s / 4, ...
+        'range_resolution_m', 299792458 / (2 * cfg.radar.bandwidth_Hz), ...
+        'sample_grid_m', 299792458 / (2 * cfg.pl.output_fs_Hz));
+    if isfield(result, 'frontend')
+        report.frontend = result.frontend;
+    end
+    root = fileparts(fileparts(fileparts(mfilename('fullpath'))));
+    sources = dir(fullfile(root, '**', '*.m'));
+    sourcePaths = fullfile({sources.folder}, {sources.name});
+    files = struct('paths', {sourcePaths}, 'project_root', root, 'out_dir', outDir);
+    rtsim.verification.write_run_manifest(result.config, files, struct('matlab', version), ...
+        struct('scenario', result.config.seed, 'calibration_train', result.config.seed + 1, ...
+            'calibration_holdout', result.config.seed + 2), report);
+    fid = fopen(fullfile(outDir, 'run_report.json'), 'w', 'n', 'UTF-8');
+    assert(fid >= 0, 'rtsim:Output', '无法创建报告文件。');
+    closer = onCleanup(@() fclose(fid));
+    fprintf(fid, '%s', jsonencode(report, 'PrettyPrint', true));
+    clear closer;
+    fid = fopen(fullfile(outDir, '运行报告.md'), 'w', 'n', 'UTF-8');
+    closer = onCleanup(@() fclose(fid));
+    fprintf(fid, '# 阶段 %s 仿真运行报告\n\n模型：%s\n\n', result.stage, result.model_scope);
+    fprintf(fid, '配置档：%s。有效复基带带宽：%.3f MHz。\n\n', cfg.profile, ...
+        cfg.baseband.usable_bandwidth_Hz / 1e6);
+    fprintf(fid, ['RFDC：%.3f MS/s、%d SPC；PL 接口：%.3f MHz；抽取率：%d；' ...
+        'DRFM：%.3f MS/s、%d SPC。\n\n'], cfg.rfdc.output_fs_Hz / 1e6, ...
+        cfg.rfdc.samples_per_clock, cfg.rfdc.interface_clock_Hz / 1e6, cfg.pl.decimation, ...
+        cfg.pl.output_fs_Hz / 1e6, cfg.pl.output_samples_per_clock);
+    fprintf(fid, ['PRF：%.3f Hz；第一不模糊距离：%.3f km；Nyquist 速度：%.3f m/s。\n\n' ...
+        '距离分辨率约 %.3f m，采样距离栅格 %.3f m，两者含义不同。\n\n'], ...
+        report.radar_limits.prf_Hz, report.radar_limits.unambiguous_range_m / 1000, ...
+        report.radar_limits.nyquist_velocity_mps, report.radar_limits.range_resolution_m, ...
+        report.radar_limits.sample_grid_m);
+    fprintf(fid, '目标距离：%.3f m；估计距离：%.3f m；误差：%.3f m。\n\n', result.config.target.range_m, ...
+        result.observables.range_m, result.scores.range_error_m);
+    fprintf(fid, '检测脉冲：%d；拒绝回放：%d；捕获丢失：%d；DMA 待传：%.0f 字节。\n\n', numel(result.pdw), ...
+        result.diagnostics.rejected_replays, result.diagnostics.dropped_captures, result.diagnostics.dma_pending_bytes);
+    fprintf(fid, '结果仅用于算法参考。实测复方向图、板卡精确配置与实测校准资料缺失，对应资格为 BLOCKED_MISSING_DATA。\n');
+    clear closer;
+    rtsim.verification.plot_result(result, fullfile(outDir, '仿真结果.png'));
 end

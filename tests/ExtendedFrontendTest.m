@@ -1,7 +1,8 @@
 classdef ExtendedFrontendTest < matlab.unittest.TestCase
-    %EXTENDEDFRONTENDTEST 前端独立非理想模型及跨块确定性测试
+    % EXTENDEDFRONTENDTEST 前端独立非理想模型及跨块确定性测试
 
     methods (Test)
+
         function commonAndRangeNoiseArePartitionInvariant(testCase)
             commonCfg = struct('gain', 1, 'noise_power_W', 0.2, 'saturation_amplitude', Inf);
             rangeCfg = struct('gains', [1 2 4], 'response', repmat(eye(2), 1, 1, 3), ...
@@ -20,9 +21,11 @@ classdef ExtendedFrontendTest < matlab.unittest.TestCase
             grid = localGrid(20000);
             spec = struct('noise_power_W', [1 4]);
             corr = [1 0.5; 0.5 1];
-            [whole, ~, ledger] = rtsim.rx.noise_model(struct('seed',31), spec, grid, corr);
-            grid.count = uint64(7000); [a, st] = rtsim.rx.noise_model(struct('seed',31), spec, grid, corr);
-            grid.count = uint64(13000); [b, ~] = rtsim.rx.noise_model(st, spec, grid, corr);
+            [whole, ~, ledger] = rtsim.rx.noise_model(struct('seed', 31), spec, grid, corr);
+            grid.count = uint64(7000);
+            [a, st] = rtsim.rx.noise_model(struct('seed', 31), spec, grid, corr);
+            grid.count = uint64(13000);
+            [b, ~] = rtsim.rx.noise_model(st, spec, grid, corr);
             testCase.verifyEqual([a; b], whole);
             empirical = (whole' * whole) / size(whole, 1);
             testCase.verifyEqual(real(diag(empirical)).', [1 4], 'RelTol', 0.04);
@@ -43,8 +46,8 @@ classdef ExtendedFrontendTest < matlab.unittest.TestCase
         function jitterEquivalentIsPartitionInvariant(testCase)
             cfg = struct('mode', "ENVELOPE_EQUIVALENT", 'rms_jitter_s', 2e-12);
             plan = struct('adc_input_frequency_Hz', 2.8e9);
-            whole = rtsim.rx.adc_jitter_inject(ones(17, 1), struct('seed',41), cfg, plan);
-            [a, st] = rtsim.rx.adc_jitter_inject(ones(6, 1), struct('seed',41), cfg, plan);
+            whole = rtsim.rx.adc_jitter_inject(ones(17, 1), struct('seed', 41), cfg, plan);
+            [a, st] = rtsim.rx.adc_jitter_inject(ones(6, 1), struct('seed', 41), cfg, plan);
             [b, ~] = rtsim.rx.adc_jitter_inject(ones(11, 1), st, cfg, plan);
             testCase.verifyEqual([a; b], whole);
         end
@@ -87,12 +90,12 @@ classdef ExtendedFrontendTest < matlab.unittest.TestCase
             x = [(1:5).' (11:15).'];
             cfg = struct('integer_delay_samples', [0 1], 'verified_layout', true);
             [y, ~, diag] = rtsim.time.channel_alignment_step(x, struct(), cfg);
-            testCase.verifyEqual(y, [x(:,1) [0; x(1:4,2)]]);
+            testCase.verifyEqual(y, [x(:, 1) [0; x(1:4, 2)]]);
             testCase.verifyFalse(diag.hardware_equivalent);
             mtsCfg = struct('enabled', true, 'mode', "BEHAVIORAL_RESIDUAL", ...
                 'integer_delay_samples', [1 0], 'verified_layout', true);
             y = rtsim.time.model_mts(x, struct(), mtsCfg, struct());
-            testCase.verifyEqual(y, [[0; x(1:4,1)] x(:,2)]);
+            testCase.verifyEqual(y, [[0; x(1:4, 1)] x(:, 2)]);
         end
 
         function hugeTimeAdvanceDetectsOverflow(testCase)
@@ -103,12 +106,13 @@ classdef ExtendedFrontendTest < matlab.unittest.TestCase
             testCase.verifyError(@() rtsim.time.advance_time_grid(grid, uint64(3)), ...
                 'rtsim:time:CounterOverflow');
         end
+
     end
 end
 
 function grid = localGrid(count)
-grid = struct('gsc0', uint64(100), 'fraction0_ticks', 0, ...
-    'step_num', uint64(1), 'step_den', uint64(1), 'count', uint64(count), ...
-    'fs_Hz', 500e6, 'f_gsc_Hz', 500e6, 'epoch_id', "E0", ...
-    'clock_id', "C0", 'index0', uint64(0));
+    grid = struct('gsc0', uint64(100), 'fraction0_ticks', 0, ...
+        'step_num', uint64(1), 'step_den', uint64(1), 'count', uint64(count), ...
+        'fs_Hz', 500e6, 'f_gsc_Hz', 500e6, 'epoch_id', "E0", ...
+        'clock_id', "C0", 'index0', uint64(0));
 end

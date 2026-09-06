@@ -1,100 +1,112 @@
-# 双偏振有源标定仪 MATLAB 仿真程序
+# 双偏振有源标定仪 MATLAB 仿真
 
-本工程依据上一级目录中的学习记录与 A/B 两阶段设计包实现。程序、测试说明和图表采用中文注释或中文标注；原设计资料没有被修改。
-
-GitHub 公开仓库：<https://github.com/Aw-ay/calibrator-matlab-sim>。
-下载或克隆后，将 MATLAB 当前文件夹切换至本仓库根目录，即可运行 `run_tests` 和 `run_demo`。下方绝对路径是原开发机器的示例，请按实际下载位置调整。
+公开仓库：[Aw-ay/calibrator-matlab-sim](https://github.com/Aw-ay/calibrator-matlab-sim)，本次修改位于 `4gps` 分支。实现依据见 [4gps修改依据](docs/4gps修改依据.md)。代码注释和运行报告使用中文。
 
 ## 运行
 
-已使用 Windows MATLAB R2025a 验证。只依赖基础 MATLAB 和自带 `matlab.unittest`，不需要 Phased Array、DSP、Statistics 或 Fixed-Point 工具箱。
-
-在 MATLAB 命令窗口执行：
+使用 MATLAB R2025a，依赖基础 MATLAB 和自带 `matlab.unittest`，无需 DSP、Phased Array 或 Fixed-Point 工具箱。下载后将 MATLAB 当前目录切换到本仓库根目录：
 
 ```matlab
-cd('E:\AWAY\matlab\calibrator_sim');
 addpath(pwd);
-run_tests;                       % 执行全部自动测试，写出验收结果
-results = run_demo;              % 运行固定平台 A 和飞行平台 B，保存图表
+run_tests;                           % 全部回归及验收记录
+run_code_checks;                     % MATLAB 静态检查
+results = run_demo;                  % 正式采样链的 A/B 示例及中文图表
+adc = run_adc_rfdc_demo;              % 独立4GS/s短窗、误差报告和对比图
 ```
 
-单独运行或修改参数：
+正式配置与快速算法回归分别选择：
+
+```matlab
+cfg = rtsim.config.default_config('RFSoC_SYSTEM_EQUIVALENT');
+cfg.target.range_m = 50000;           % 虚拟目标距离，单位米
+result = run_stage_a(cfg);
+
+quick = rtsim.config.default_config('ALGORITHM_SMOKE');
+quick.output.save = false;           % 快速回归可关闭图表与波形落盘
+result = run_stage_a(quick);
+```
+
+两档使用相同的 DRFM、延迟公式、校准参考面、极化处理和 A/B 核心。快速档用于软件回归；正式档使用下列采样结构。
+
+## 采样体系
+
+| 参数 | 正式配置 | 含义 |
+|---|---:|---|
+| RF 载频 | 2.8 GHz，可设 2.7–3.0 GHz | 射频中心频率 |
+| 实 ADC 采样率 | 4 GS/s | 仅用于独立短窗专项模型 |
+| RFDC 复数输出 | 500 MS/s | 主仿真的输入采样率 |
+| RFDC 并行接口 | 8 SPC、62.5 MHz | 每时钟八个连续样点 |
+| PL 抽取 | 抗混叠 FIR、D=8 | 500 → 62.5 MS/s |
+| DRFM 核心 | 62.5 MS/s、1 SPC | 捕获、校准、目标处理与回放 |
+| 有效复基带带宽 | 20 MHz | 以零频为中心的 −10 至 +10 MHz |
+
+主链真实构造 `clock × 8 × H/V × 三量程` 数据，经有状态 FIR 抽取送入核心。20 MHz 始终表示需要保留的有效带宽；62.5 MHz 表示接口时钟；两者均不能代替 RFDC 的 500 MS/s 样点率。
+
+```text
+雷达复包络 → 前向传播 → 公共前端 / 三量程 H/V / RFDC 等效 IQ
+          → 500 MS/s、8 SPC → 抗混叠 FIR / D8
+          → 62.5 MS/s、1 SPC → 捕获 / EOP / 选档 / RX 校准
+          → 目标 Jones 矩阵 / 因果延迟调度 / 回放
+          → TX 校准 / DAC / RF → 反向传播 → 雷达接收与匹配滤波
+```
+
+4 GS/s 专项在几微秒窗口内生成实 RF 采样，检查 Nyquist 区、NCO 符号、量化、抖动、DDC 和 RFDC 抽取，并与理想 500 MS/s 复基带比较。系统级长记录从 RFDC 复数端开始，避免连续展开 4 GS/s 数据。
+
+## 雷达波形与捕获
+
+支持 smoke、近程短脉冲、常规天气 LFM、远程 LFM、强天气高 PRF 和标定波形参数族。每次配置检查严格要求脉宽小于 PRI，并计算：
+
+- 第一不模糊距离：`c / (2 PRF)`。
+- Nyquist 速度：`λ PRF / 4`。
+- 理论距离分辨率：`c / (2 B)`。
+- 距离采样栅格：`c / (2 Fcore)`，正式配置约 2.398 m。
+
+**2.398 m 是采样栅格，距离分辨率由波形带宽决定。** 例如 1 MHz 带宽的分辨率约 150 m，20 MHz 带宽约 7.5 m。不同 PRF 的不模糊距离与速度不同。
+
+| `apply_radar_profile` 名称 | 默认脉宽 | 带宽 | PRF | 脉冲数 |
+|---|---:|---:|---:|---:|
+| `SMOKE` | 10 μs | 1 MHz | 1 kHz | 4 |
+| `SHORT_PULSE` | 2 μs | 2 MHz | 3 kHz | 64 |
+| `NORMAL_LFM` | 40 μs | 5 MHz | 1 kHz | 64 |
+| `LONG_RANGE_LFM` | 120 μs | 2 MHz | 0.5 kHz | 64 |
+| `SEVERE_WEATHER` | 20 μs | 5 MHz | 3.3 kHz | 128 |
+| `CALIBRATION` | 保留用户波形参数 | ≤20 MHz | 可配置 | 可配置 |
 
 ```matlab
 cfg = rtsim.config.default_config();
-cfg.target.range_m = 25000;      % 虚拟目标距离，单位为米
-cfg.target.doppler_Hz = 100;     % 独立多普勒测试频移
-a = run_stage_a(cfg);
-
-cfg = rtsim.config.apply_case_profile(cfg,'B1');
-cfg.navigation.position_bias_m = [0.01;0;0]; % 导航位置偏差
-b = run_stage_b(cfg);
+cfg.target.range_m = 100000;
+cfg.radar.receive_gate_m = [500, 150000];
+cfg = rtsim.config.apply_radar_profile(cfg, 'LONG_RANGE_LFM');
+% 完整64脉冲任务比默认smoke波形需要更多时间和内存。
+result = run_stage_a(cfg);
 ```
 
-默认波形为 2.8 GHz 载频的复包络表示，复采样率 20 MHz、带宽 1 MHz、脉宽 10 μs、PRI 1 ms、4 个脉冲。物理距离 2 km、虚拟距离 20 km。**这些都是算法演示假设，不是 RFSoC 实 ADC 采样率或整机验收指标。**
+捕获参数以秒配置，运行时根据核心采样率派生点数：预触发 2 μs、后触发 2 μs、EOP 保持 1 μs。正式配置按最大 120 μs 脉宽使用 8192 点 bank；124 μs 对应 7750 点，并为滤波尾部预留空间。改变采样率时不应手工覆盖派生点数。
 
-`run_stage_b()` 默认运行飞行场景；`run_stage_b(cfg)` 保留用户传入的全部配置。因此把同一个静止配置分别传给 A/B，就是严格退化回归。
+## 时间与数据流
 
-## 结果文件
-
-每次运行在 `results/A_时间戳` 或 `results/B_时间戳` 中保存：
-
-- `result.mat`：雷达发射、RP1 接收、RP1 发射、雷达接收波形、距离像、PDW、选档、RAW 码字、拒绝原因和平台日志。
-- `pdw.csv`：到达时间、脉宽、功率、频率、量程及校准编号。
-- `run_report.json` 和 `运行报告.md`：误差、模型资格、缺失数据及延迟/相位账本。
-- `run_manifest.json`：配置、MATLAB 版本、种子与源码 SHA-256。
-- `仿真结果.png`：中文四联图。
-
-`results/acceptance/automatic_tests.csv` 是**本工程实际执行的自动测试结果**。
-`original_spec_matrix.csv` 是**原设计 T01–T40 的完整验收资格**。前者通过不会让未执行的硬件子场景自动变为 PASS；只有明确完整覆盖的 T30 退化断言直接映射 PASS。其余根据资料和覆盖情况保留 NOT_RUN、BLOCKED_MISSING_DATA 或 NOT_APPLICABLE。
-
-## 已实现的主链
+物理接收时间和数据可用时间分别记录。FIR 群延迟从样点物理时间标签中补偿一次；数据可用时间仍包含 FIR、EOP 确认、选档、RX 校准及 bank 读准备。
 
 ```text
-有限 LFM/CW 雷达发射
-  → 单程 OTA/电缆、Jones、多径分数延迟
-  → 公共前端和公共噪声 → 三档 H/V 接收 → ADC 量化 → 基带 DDC
-  → 因果检测、预触发捕获、EOP 整脉冲选档
-  → 独立 RX 校准测量拟合 → DRFM 延迟/极化/剩余相位
-  → 信号源选择和半双工/故障保护 → 共用 TX 校准 → DAC → RF
-  → 反向传播 + 独立机体被动回波
-  → 雷达接收死区/噪声 → 匹配滤波 → 距离/多普勒/HV 观测
+tau_dev  = (2 Rv - Rf - Rb) / c
+t_target = t_RX + tau_dev
+t_cmd    = t_target - tau_fixed
+t_actual = t_cmd + tau_fixed
+t_cmd   >= t_data_ready
 ```
 
-捕获 bank 持有回放和 DMA 两份独立引用；DMA 服务每样点只消费一次总带宽预算。忙 bank 不覆盖，没有空闲 bank 会记录丢失。回放冲突显式拒绝，FIFO 等待和固定流水不重复加到虚拟距离。
+无法满足因果约束的回放会被明确拒绝。固定流水和 FIR 延迟不会再叠加到虚拟目标距离。长脉冲在近虚拟距离处可能尚未捕获完成，这属于不可实现时延，不能通过等待后再发射冒充正确距离。
 
-校准由独立 H/V 激励的合成测量估计，再用另一种子留出数据验证。在线核心只接收估计系数和导航观测，不读取真实 RF 响应矩阵。实测数据接口和格式见 `docs/geometry_report.md`、`docs/calibration_airborne_report.md`。
+bank 对回放和 DMA 保持独立引用。DMA 为零或拥塞不会移动已接受回放的时刻；bank 被占满时，新捕获会记录丢失，已有记录不会被覆盖。
 
-## 信号源与安全
+## 输出与模型范围
 
-- `DRFM`：默认模式，检测并捕获完整脉冲后回放，短到无法取得数据的目标时延会被拒绝。
-- `DDS`：按 `instrument.source_start_s` 起始，在有限脉冲窗产生独立单音。
-- `AWG`：需提供 `instrument.awg_table`，形状为 N×2 的复数模板，采样率等于工程复采样率。
-- `LIVE`：只允许电缆或明确隔离的收发端口；禁止物理正反馈回环。
-- `MUTE`：所有有源输出为零，配置的机体被动散射仍存在。
+每次 A/B 运行保存 `result.mat`、`pdw.csv`、`run_report.json`、`运行报告.md`、`run_manifest.json` 和 `仿真结果.png`。报告包含采样体系、雷达限制、观测误差及时间账本；清单记录配置、种子、MATLAB 版本和源码 SHA-256。
 
-DDS/AWG 同样检查完整发射区间与接收保护窗口；时钟失锁、欠压、过温、导航无效时关闭发射。`source_start_s` 表示仪器本地发射源起始时间，不自动等于虚拟目标距离。
+`results/acceptance/automatic_tests.csv` 是实际运行的测试结果。`original_spec_matrix.csv` 保留原 T01–T40 规格的资格边界：软件测试通过不能替代尚缺的实测天线、实测校准、板卡与 RTL 验证。
 
-## 数据约定和文件组织
+校准由独立 H/V 合成激励估计，再用独立种子留出数据验证。在线核心只接收估计系数与导航观测；真实平台状态只进入传播和评分。相同静止配置下 A/B 使用同一核心。
 
-- 物理复波形为 N×2，列顺序 H/V，单位 sqrt(W)，功率为 `abs(iq).^2`。
-- 三档数据为 N×2×3，顺序 HIGH/MID/LOW；H/V 对同一脉冲选择同一档。
-- RAW 记录使用分开的 `i_code/q_code` 与 `lsb`，明确 `ADC_RAW` 参考面；不把已校准数据标成 RAW。
-- 坐标为 ENU 三元素列向量；角度明确使用度或弧度。方向图原始值与显示展宽分开保存。
-- 独立模块的 SampleGrid 支持 uint64 大计数与有理数步长；主链采用有内存上限的短窗口局部样点索引。
-- `+rtsim` 下按 config、geometry、pattern、channel、rx、ddc、capture、calibration、replay、tx、dataflow、radar、airborne、verification 分包。
-- `docs/函数实现覆盖.json` 对照原 124 个设计名称。存在源码表示相应基线接口已实现，不表示原职责中的所有高保真分支均已实现。
+仍保留以下模型范围：频率平坦 2×2 校准；线性分数延迟；B 平台按块冻结传播几何；完整输出受内存上限约束。长 CPI 会增加运算与存储量。当前工程是系统功能参考，不提供板卡逐拍 RTL、真实 AXI/MTS、全带宽计量校准或随机天气统计资格。`LIVE` 需要电缆或明确隔离的端口；其他信号源继续执行半双工和故障保护。
 
-## 模型范围与保留事项
-
-本次交付是**可运行的复包络参考工程**，不是板卡逐拍复刻。
-
-1. 主链使用理想复天线与频率平坦 2×2 校准。实测复方向图、全带宽校准、计量溯源数据缺失，因此不能宣称真实 XPD/相位/功率校准资格。
-2. 线性分数延迟在近 Nyquist 处有幅度下垂。默认带宽保留裕量；独立滤波器工具可用于进一步验证。
-3. B 主链按短块冻结真实几何，并用已到达观测的恒速度预测求未来回放延迟。独立 `solve_retarded_geometry` 实现迭代光行时，但主链尚不是逐样点连续运动/宽带天线迟滞传播，快速加速、姿态变化及长等待需做块长收敛和进一步模型验证。
-4. 主链的记录窗口受 `sim.max_samples` 限制；独立队列/存储模型支持任务预算分析，但主链没有将长任务完整波形自动转换为事件压缩存储。
-5. `SAMPLED_CONVERTER`、`BIT_TRUE_STREAM`、真实 AXI/MTS/RTL、4×8 频率子信道、随机天气源、完整 DPD 与近场扩展不会被静默当成已支持。未确认的可选分支默认关闭。
-6. 固定门限检测用于可解释基线；独立 EWMA、边沿估计等模块供算法实验。低 SNR 虚警/漏检统计和所有原始 T19 子场景仍需专门任务，不能由演示曲线推断指标。
-7. 单个确定性目标的相关系数不等于任意随机天气相关系数；点目标功率不转换为未定义的 dBZ。
-
-更完整的模块约束、输入字段和测试证据见 `docs` 中各模块报告。
+历史模块报告描述初版接口；采样率、捕获和时间链的最新约定以本 README 与 4gps 修改报告为准。

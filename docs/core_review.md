@@ -1,3 +1,5 @@
+> 本文为初版设计或验证记录。4gps 分支的最新采样体系、捕获时序及验收结果见 [4gps修改报告](4gps修改报告.md)；初版测试数量和运行记录保留作历史追溯。
+
 # 核心闭环独立代码审查
 
 范围：只读审阅 `+sim/simulate_case.m`、`+core/instrument_core_step.m`、`+replay`、`+radar`、`+config` 和 `tests/EndToEndTest.m`。重点按因果、距离/相位、bank/DMA、安全和真值边界检查。未修改被审源码。

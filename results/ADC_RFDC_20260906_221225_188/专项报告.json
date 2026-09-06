@@ -1,0 +1,12 @@
+{
+  "model": "4GS/s 实RF短窗 → DDC/D8 → 500MS/s复IQ",
+  "adc_fs_Hz": 4.0E+9,
+  "output_fs_Hz": 5.0E+8,
+  "nyquist_zone": 2,
+  "nco_sign": -1,
+  "nominal_relative_rms_error": 1.1656288990233644E-5,
+  "impaired_relative_rms_error": 0.00658969246638313,
+  "impaired_jitter_rms_s": 1E-12,
+  "impaired_adc_bits": 8,
+  "scope": "合成单音验证；不是RFDC厂商位精确模型或板卡测试"
+}
