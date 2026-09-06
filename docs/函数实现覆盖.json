@@ -1,0 +1,994 @@
+[
+  {
+    "name": "default_config",
+    "group": "00 配置与入口",
+    "design_signature": "cfg = default_config()",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+config\\default_config.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "apply_case_profile",
+    "group": "00 配置与入口",
+    "design_signature": "cfg = apply_case_profile(cfg, profileName)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+config\\apply_case_profile.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "validate_config",
+    "group": "00 配置与入口",
+    "design_signature": "report = validate_config(cfg, capabilities)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+config\\validate_config.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "audit_inputs",
+    "group": "00 配置与入口",
+    "design_signature": "audit = audit_inputs(projectRoot, cfg)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+config\\audit_inputs.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "run_stage_a",
+    "group": "00 配置与入口",
+    "design_signature": "result = run_stage_a(cfg)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\run_stage_a.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "run_stage_b",
+    "group": "00 配置与入口",
+    "design_signature": "result = run_stage_b(cfg)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\run_stage_b.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "simulate_case",
+    "group": "00 配置与入口",
+    "design_signature": "result = simulate_case(cfg, worldProvider, observationProvider)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+sim\\simulate_case.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "instrument_core_step",
+    "group": "00 配置与入口",
+    "design_signature": "[dacBaseband, pdw, records, st, diag] = instrument_core_step(nativeAdc, st, cfgCore, controlEstimate, serviceModel, grid)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+core\\instrument_core_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "init_state",
+    "group": "00 配置与入口",
+    "design_signature": "state = init_state(cfg)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+sim\\init_state.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "step_event_engine",
+    "group": "00 配置与入口",
+    "design_signature": "[events, st] = step_event_engine(requests, st, grid)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+sim\\step_event_engine.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "make_signal_block",
+    "group": "01 数据与时间契约",
+    "design_signature": "block = make_signal_block(samples, grid, domain, provenance)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+contract\\make_signal_block.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "validate_signal_block",
+    "group": "01 数据与时间契约",
+    "design_signature": "validate_signal_block(block, expectedContract)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+contract\\validate_signal_block.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "advance_time_grid",
+    "group": "01 数据与时间契约",
+    "design_signature": "gridNext = advance_time_grid(grid, count)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+time\\advance_time_grid.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "clock_model_step",
+    "group": "01 数据与时间契约",
+    "design_signature": "[clocks, st] = clock_model_step(grid, st, cfgClock, plantCond)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+time\\clock_model_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "gsc_stamp",
+    "group": "01 数据与时间契约",
+    "design_signature": "stamp = gsc_stamp(sampleGrid, lane, clockObservation)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+time\\gsc_stamp.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "latency_ledger",
+    "group": "01 数据与时间契约",
+    "design_signature": "ledger = latency_ledger(cfg, measuredLatencies, mode)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+time\\latency_ledger.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "model_mts",
+    "group": "01 数据与时间契约",
+    "design_signature": "[aligned, st, diag] = model_mts(in, st, cfgMts, startupState)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+time\\model_mts.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "channel_alignment_step",
+    "group": "01 数据与时间契约",
+    "design_signature": "[out, st, diag] = channel_alignment_step(in, st, cfgAlign)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+time\\channel_alignment_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "geodetic2ecef_wgs84",
+    "group": "02 原坐标链与方向约定",
+    "design_signature": "[ecef_m, R_ECEF_to_ENU] = geodetic2ecef_wgs84(lat_deg, lon_deg, h_ellip_m)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+geometry\\geodetic2ecef_wgs84.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "ecef_to_enu",
+    "group": "02 原坐标链与方向约定",
+    "design_signature": "enu_m = ecef_to_enu(ecef_m, stationEcef_m, R_station)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+geometry\\ecef_to_enu.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "enu_vec_to_az_el_R",
+    "group": "02 原坐标链与方向约定",
+    "design_signature": "[az_deg, el_deg, range_m] = enu_vec_to_az_el_R(v_enu)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+geometry\\enu_vec_to_az_el_R.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "lookat_R",
+    "group": "02 原坐标链与方向约定",
+    "design_signature": "R = lookat_R(b)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+geometry\\lookat_R.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "beam_frame_from_pose",
+    "group": "02 原坐标链与方向约定",
+    "design_signature": "frame = beam_frame_from_pose(qBodyToENU, mountRotation, beamCommand)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+geometry\\beam_frame_from_pose.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "coordinate_convention_adapter",
+    "group": "02 原坐标链与方向约定",
+    "design_signature": "angles = coordinate_convention_adapter(unitDirections, sourceMeta, targetMeta)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+geometry\\coordinate_convention_adapter.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "solve_retarded_geometry",
+    "group": "02 原坐标链与方向约定",
+    "design_signature": "geometry = solve_retarded_geometry(txEvent, deviceTask, trajectories, cfgGeom)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+geometry\\solve_retarded_geometry.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "load_pattern_config",
+    "group": "03 方向图与原文离线数据准备",
+    "design_signature": "patterns = load_pattern_config(cfgPattern)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+pattern\\load_pattern_config.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "pattern_interpolator",
+    "group": "03 方向图与原文离线数据准备",
+    "design_signature": "[response, validity] = pattern_interpolator(patterns, query)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+pattern\\pattern_interpolator.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "build_antenna_jones",
+    "group": "03 方向图与原文离线数据准备",
+    "design_signature": "[Jtx, Jrx, meta] = build_antenna_jones(patterns, pose, direction, freq_Hz)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+pattern\\build_antenna_jones.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "check_pattern_validity",
+    "group": "03 方向图与原文离线数据准备",
+    "design_signature": "validity = check_pattern_validity(patterns, geometry, requirements)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+pattern\\check_pattern_validity.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "render_pattern_sys",
+    "group": "03 方向图与原文离线数据准备",
+    "design_signature": "displayPattern = render_pattern_sys(rawPattern, scanModel, receiverModel)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+pattern\\render_pattern_sys.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "digitize_pattern_png",
+    "group": "03 方向图与原文离线数据准备",
+    "design_signature": "cuts = digitize_pattern_png(imageFiles, axisMetadata)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+pattern\\digitize_pattern_png.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "restore_cuts_absolute_gain",
+    "group": "03 方向图与原文离线数据准备",
+    "design_signature": "cuts = restore_cuts_absolute_gain(normalizedCuts, gainReference)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+pattern\\restore_cuts_absolute_gain.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "reconstruct_3d_pattern_from_cuts_v2",
+    "group": "03 方向图与原文离线数据准备",
+    "design_signature": "model = reconstruct_3d_pattern_from_cuts_v2(cuts, modelAssumptions)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+pattern\\reconstruct_3d_pattern_from_cuts_v2.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "direct_path",
+    "group": "04 双程传播与多径",
+    "design_signature": "path = direct_path(txPose, rxPose, cfgChannel)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+channel\\direct_path.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "mirror_path",
+    "group": "04 双程传播与多径",
+    "design_signature": "paths = mirror_path(txPose, rxPose, surface, freq_Hz)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+channel\\mirror_path.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "bistatic_scatter_path",
+    "group": "04 双程传播与多径",
+    "design_signature": "paths = bistatic_scatter_path(txPose, rxPose, scatterers, cfg)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+channel\\bistatic_scatter_path.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "combine_complex_paths",
+    "group": "04 双程传播与多径",
+    "design_signature": "[out, st] = combine_complex_paths(in, paths, st, grid)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+channel\\combine_complex_paths.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "channel_step",
+    "group": "04 双程传播与多径",
+    "design_signature": "[out, st, diag] = channel_step(in, st, channelCfg, geometry)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+channel\\channel_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "link_budget_check",
+    "group": "04 双程传播与多径",
+    "design_signature": "report = link_budget_check(caseCfg, measuredPortPowers, channelDiag)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+channel\\link_budget_check.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "radar_tx_step",
+    "group": "05 雷达和仪器波形源",
+    "design_signature": "[tx, events, st] = radar_tx_step(st, cfgRadar, grid)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+source\\radar_tx_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "dds_step",
+    "group": "05 雷达和仪器波形源",
+    "design_signature": "[iq, st] = dds_step(st, cfgDds, grid)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+source\\dds_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "lfm_waveform",
+    "group": "05 雷达和仪器波形源",
+    "design_signature": "[iq, st] = lfm_waveform(st, waveform, pulseEvents, grid)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+source\\lfm_waveform.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "awg_step",
+    "group": "05 雷达和仪器波形源",
+    "design_signature": "[iq, st, diag] = awg_step(st, waveformTable, task, grid)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+source\\awg_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "burst_scheduler_step",
+    "group": "05 雷达和仪器波形源",
+    "design_signature": "[pulseEvents, st] = burst_scheduler_step(st, descriptors, grid)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+source\\burst_scheduler_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "source_sync_model",
+    "group": "05 雷达和仪器波形源",
+    "design_signature": "sync = source_sync_model(radarClock, instrumentClock, triggerObservation, cfgSync)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+source\\source_sync_model.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "rx_common_step",
+    "group": "06 模拟接收与ADC",
+    "design_signature": "[out, st, diag] = rx_common_step(portIQ, st, cfgRf, plantCond)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+rx\\rx_common_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "rx_three_range_step",
+    "group": "06 模拟接收与ADC",
+    "design_signature": "[rangeSignals, st, diag] = rx_three_range_step(commonIQ, st, cfgRanges, plantCond)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+rx\\rx_three_range_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "noise_model",
+    "group": "06 模拟接收与ADC",
+    "design_signature": "[noise, st, ledger] = noise_model(st, specification, grid, correlation)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+rx\\noise_model.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "adc_pipeline",
+    "group": "06 模拟接收与ADC",
+    "design_signature": "[codes, st, diag] = adc_pipeline(analogSignal, st, cfgAdc, clockTruth)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+rx\\adc_pipeline.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "adc_sigma_from_nsd",
+    "group": "06 模拟接收与ADC",
+    "design_signature": "budget = adc_sigma_from_nsd(nsdSpec, reference, includedSources)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+rx\\adc_sigma_from_nsd.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "adc_jitter_inject",
+    "group": "06 模拟接收与ADC",
+    "design_signature": "[out, st] = adc_jitter_inject(in, st, jitterModel, frequencyPlan)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+rx\\adc_jitter_inject.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "adc_make_inl_from_dnl",
+    "group": "06 模拟接收与ADC",
+    "design_signature": "transfer = adc_make_inl_from_dnl(dnlData, conventions)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+rx\\adc_make_inl_from_dnl.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "adc_apply_interleave_spurs",
+    "group": "06 模拟接收与ADC",
+    "design_signature": "[out, st] = adc_apply_interleave_spurs(in, st, mismatch, mode)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+rx\\adc_apply_interleave_spurs.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "adc_clip_round",
+    "group": "06 模拟接收与ADC",
+    "design_signature": "[iCode, qCode, flags] = adc_clip_round(signal, cfgQuant)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+rx\\adc_clip_round.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "adc_metrics",
+    "group": "06 模拟接收与ADC",
+    "design_signature": "metrics = adc_metrics(samples, testDefinition, grid)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+rx\\adc_metrics.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "frequency_plan",
+    "group": "07 DDC、抽取与定点对齐",
+    "design_signature": "plan = frequency_plan(cfgRf, cfgRfdc, capabilities)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+ddc\\frequency_plan.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "design_filter_chain",
+    "group": "07 DDC、抽取与定点对齐",
+    "design_signature": "filters = design_filter_chain(ratePlan, bandwidthSpec, arithmeticSpec)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+ddc\\design_filter_chain.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "nco_mixer",
+    "group": "07 DDC、抽取与定点对齐",
+    "design_signature": "[out, st] = nco_mixer(in, st, cfgNco, grid)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+ddc\\nco_mixer.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "halfband_decimator",
+    "group": "07 DDC、抽取与定点对齐",
+    "design_signature": "[out, st, diag] = halfband_decimator(in, st, filterCfg)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+ddc\\halfband_decimator.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "rfdc_stream_adapter",
+    "group": "07 DDC、抽取与定点对齐",
+    "design_signature": "[out, st, diag] = rfdc_stream_adapter(nativeStream, st, layoutCfg)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+ddc\\rfdc_stream_adapter.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "fixedpoint_model",
+    "group": "07 DDC、抽取与定点对齐",
+    "design_signature": "[out, diag] = fixedpoint_model(in, arithmeticSpec)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+ddc\\fixedpoint_model.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "noise_estimator_ewma",
+    "group": "08 检测、捕获、选档与PDW",
+    "design_signature": "[estimate, st, diag] = noise_estimator_ewma(power, st, cfgNoise)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+capture\\noise_estimator_ewma.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "overgate_detect",
+    "group": "08 检测、捕获、选档与PDW",
+    "design_signature": "[events, st, diag] = overgate_detect(power, st, cfgDetector, grid)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+capture\\overgate_detect.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "range_qualifier_step",
+    "group": "08 检测、捕获、选档与PDW",
+    "design_signature": "[qual, st] = range_qualifier_step(rangeIQ, detectorEvents, st, cfgQual)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+capture\\range_qualifier_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "range_select_eop",
+    "group": "08 检测、捕获、选档与PDW",
+    "design_signature": "selection = range_select_eop(qualification, policy)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+capture\\range_select_eop.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "capture_pingpong_step",
+    "group": "08 检测、捕获、选档与PDW",
+    "design_signature": "[descriptors, st, diag] = capture_pingpong_step(rangeIQ, events, st, cfgCapture)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+capture\\capture_pingpong_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "consumer_arbiter_step",
+    "group": "08 检测、捕获、选档与PDW",
+    "design_signature": "[grants, st, diag] = consumer_arbiter_step(requests, st, memoryPortModel)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+capture\\consumer_arbiter_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "edge_fuse_2_8",
+    "group": "08 检测、捕获、选档与PDW",
+    "design_signature": "edges = edge_fuse_2_8(selectedIQ, window, edgeCfg)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+capture\\edge_fuse_2_8.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "pdw_measure",
+    "group": "08 检测、捕获、选档与PDW",
+    "design_signature": "pdw = pdw_measure(selectedIQ, coarseContext, measureCfg)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+capture\\pdw_measure.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "pdw_reference_map",
+    "group": "08 检测、捕获、选档与PDW",
+    "design_signature": "pdwRef = pdw_reference_map(pdw, signalMetadata, calEstimate, ledger)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+capture\\pdw_reference_map.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "pdw_fuse",
+    "group": "08 检测、捕获、选档与PDW",
+    "design_signature": "[events, audit] = pdw_fuse(candidates, associationCfg)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+capture\\pdw_fuse.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "simulate_calibration_session",
+    "group": "09 校准与量值闭环",
+    "design_signature": "measurements = simulate_calibration_session(plant, standards, calTasks, seed)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+calibration\\simulate_calibration_session.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "estimate_rx_cal",
+    "group": "09 校准与量值闭环",
+    "design_signature": "calRx = estimate_rx_cal(measurements, referenceDefinition, fitCfg)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+calibration\\estimate_rx_cal.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "estimate_tx_cal",
+    "group": "09 校准与量值闭环",
+    "design_signature": "calTx = estimate_tx_cal(measurements, referenceDefinition, fitCfg)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+calibration\\estimate_tx_cal.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "estimate_delay_cal",
+    "group": "09 校准与量值闭环",
+    "design_signature": "calDelay = estimate_delay_cal(measurements, timingReference, cfg)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+calibration\\estimate_delay_cal.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "solve_regularized_inverse",
+    "group": "09 校准与量值闭环",
+    "design_signature": "operator = solve_regularized_inverse(responseEstimate, constraints)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+calibration\\solve_regularized_inverse.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "apply_rx_cal",
+    "group": "09 校准与量值闭环",
+    "design_signature": "[out, st, diag] = apply_rx_cal(selectedRaw, st, calRx, context)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+calibration\\apply_rx_cal.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "apply_tx_cal",
+    "group": "09 校准与量值闭环",
+    "design_signature": "[out, st, diag] = apply_tx_cal(desiredPortIQ, st, calTx, context)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+calibration\\apply_tx_cal.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "validate_calibration",
+    "group": "09 校准与量值闭环",
+    "design_signature": "report = validate_calibration(calSet, holdoutMeasurements, limits)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+calibration\\validate_calibration.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "update_calibration",
+    "group": "09 校准与量值闭环",
+    "design_signature": "[newSet, diag] = update_calibration(oldSet, txRxMonitor, telemetry, policy)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+calibration\\update_calibration.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "solve_target_delay",
+    "group": "10 DRFM、目标算子与调度",
+    "design_signature": "plan = solve_target_delay(task, geometryEstimate, latencyEstimate, grid)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+replay\\solve_target_delay.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "solve_target_gain",
+    "group": "10 DRFM、目标算子与调度",
+    "design_signature": "gainPlan = solve_target_gain(task, linkEstimate, radarProfile, limits)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+replay\\solve_target_gain.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "build_polarization_operator",
+    "group": "10 DRFM、目标算子与调度",
+    "design_signature": "operator = build_polarization_operator(targetSpec, antennaEstimate, poseEstimate)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+replay\\build_polarization_operator.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "solve_phase_command",
+    "group": "10 DRFM、目标算子与调度",
+    "design_signature": "command = solve_phase_command(task, modeledPhaseEstimate, timeGrid, convention)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+replay\\solve_phase_command.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "check_tx_windows",
+    "group": "10 DRFM、目标算子与调度",
+    "design_signature": "decision = check_tx_windows(txPlan, rxWindows, availability, resourceState)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+replay\\check_tx_windows.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "replay_scheduler_step",
+    "group": "10 DRFM、目标算子与调度",
+    "design_signature": "[requests, st, diag] = replay_scheduler_step(descriptors, commands, st, grid)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+replay\\replay_scheduler_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "fractional_delay_step",
+    "group": "10 DRFM、目标算子与调度",
+    "design_signature": "[out, st, diag] = fractional_delay_step(in, st, fractionalDelay, filterCfg)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+replay\\fractional_delay_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "doppler_nco_step",
+    "group": "10 DRFM、目标算子与调度",
+    "design_signature": "[out, st] = doppler_nco_step(in, st, residualPhaseCommand, grid)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+replay\\doppler_nco_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "tx_source_mux",
+    "group": "11 发射链、监测与回环",
+    "design_signature": "[out, st, diag] = tx_source_mux(sources, st, activeMode, gate)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+tx\\tx_source_mux.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "duc_dac_step",
+    "group": "11 发射链、监测与回环",
+    "design_signature": "[analog, st, diag] = duc_dac_step(baseband, st, cfgDac, clockTruth)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+tx\\duc_dac_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "tx_rf_step",
+    "group": "11 发射链、监测与回环",
+    "design_signature": "[portOut, monitorTap, st, diag] = tx_rf_step(dacSignal, st, cfgRf, plantCond)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+tx\\tx_rf_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "tx_monitor_step",
+    "group": "11 发射链、监测与回环",
+    "design_signature": "[measurement, st, diag] = tx_monitor_step(tap, st, monitorCfg, clockTruth)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+tx\\tx_monitor_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "loopback_channel_step",
+    "group": "11 发射链、监测与回环",
+    "design_signature": "[rxInput, st, diag] = loopback_channel_step(txOutput, st, fixtureCfg)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+tx\\loopback_channel_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "safety_fsm_step",
+    "group": "11 发射链、监测与回环",
+    "design_signature": "[gate, st, faults] = safety_fsm_step(commands, observedStatus, st, cfgSafety)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+tx\\safety_fsm_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "pdw_fifo_step",
+    "group": "12 上传、PS与存储",
+    "design_signature": "[delivered, st, diag] = pdw_fifo_step(pdwInput, serviceEvents, st, cfgFifo)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+dataflow\\pdw_fifo_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "iq_frame_pack",
+    "group": "12 上传、PS与存储",
+    "design_signature": "frame = iq_frame_pack(iq, descriptor, pdw, formatCfg)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+dataflow\\iq_frame_pack.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "dma_queue_step",
+    "group": "12 上传、PS与存储",
+    "design_signature": "[completed, st, diag] = dma_queue_step(frames, st, busService, cfgDma)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+dataflow\\dma_queue_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "ps_service_step",
+    "group": "12 上传、PS与存储",
+    "design_signature": "[commands, data, st, diag] = ps_service_step(observations, queues, st, cfgPs)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+dataflow\\ps_service_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "config_commit_step",
+    "group": "12 上传、PS与存储",
+    "design_signature": "[activeCfg, st, diag] = config_commit_step(shadowWrites, safeBoundary, st)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+dataflow\\config_commit_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "storage_link_step",
+    "group": "12 上传、PS与存储",
+    "design_signature": "[saved, sent, st, diag] = storage_link_step(records, st, storageCfg, radioCfg)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+dataflow\\storage_link_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "radar_rx_step",
+    "group": "13 被测雷达接收与解算",
+    "design_signature": "[iq, st, diag] = radar_rx_step(arrivingSignals, st, cfgRadar, radarClock)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+radar\\radar_rx_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "range_compress_step",
+    "group": "13 被测雷达接收与解算",
+    "design_signature": "[gates, st, diag] = range_compress_step(iq, st, waveformProfile, timing)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+radar\\range_compress_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "radar_observable_estimator",
+    "group": "13 被测雷达接收与解算",
+    "design_signature": "observables = radar_observable_estimator(gates, pulseTimes, cfgEstimator)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+radar\\radar_observable_estimator.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "radar_calibration_solver",
+    "group": "13 被测雷达接收与解算",
+    "design_signature": "calibration = radar_calibration_solver(observables, referenceTargets, cfgCalTask)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+radar\\radar_calibration_solver.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "platform_truth_step",
+    "group": "14 阶段B机载适配器",
+    "design_signature": "[truth, st] = platform_truth_step(st, trajectory, vibrationCfg, grid)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+airborne\\platform_truth_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "nav_sensor_step",
+    "group": "14 阶段B机载适配器",
+    "design_signature": "[navObservations, st] = nav_sensor_step(truth, st, sensorCfg)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+airborne\\nav_sensor_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "nav_time_aligner",
+    "group": "14 阶段B机载适配器",
+    "design_signature": "[poseEstimate, st, diag] = nav_time_aligner(navObservations, ppsCapture, st, requestTimes)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+airborne\\nav_time_aligner.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "antenna_pose_step",
+    "group": "14 阶段B机载适配器",
+    "design_signature": "antennaState = antenna_pose_step(platformState, mounting, leverArm, vibration)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+airborne\\antenna_pose_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "air_thermal_step",
+    "group": "14 阶段B机载适配器",
+    "design_signature": "[temperatures, st] = air_thermal_step(st, ambient, electricalLoads, cfgThermal, dt)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+airborne\\air_thermal_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "air_power_step",
+    "group": "14 阶段B机载适配器",
+    "design_signature": "[supplies, observations, st] = air_power_step(st, battery, motorLoads, cfgSupply, dt)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+airborne\\air_power_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "air_emc_step",
+    "group": "14 阶段B机载适配器",
+    "design_signature": "[disturbances, st] = air_emc_step(st, motorState, couplingModel, grid)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+airborne\\air_emc_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "platform_scatter_step",
+    "group": "14 阶段B机载适配器",
+    "design_signature": "[echo, st] = platform_scatter_step(radarTx, geometry, bodyModel, st)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+airborne\\platform_scatter_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "air_adapter_step",
+    "group": "14 阶段B机载适配器",
+    "design_signature": "[plantBoundary, measuredBoundary, st] = air_adapter_step(st, providers, grid)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+airborne\\air_adapter_step.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "compare_to_truth",
+    "group": "15 验证与可追溯输出",
+    "design_signature": "scores = compare_to_truth(measurements, truth, acceptanceSpec)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+verification\\compare_to_truth.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "propagate_uncertainty",
+    "group": "15 验证与可追溯输出",
+    "design_signature": "budget = propagate_uncertainty(model, distributions, covariance, cfgMC)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+verification\\propagate_uncertainty.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "run_acceptance_suite",
+    "group": "15 验证与可追溯输出",
+    "design_signature": "report = run_acceptance_suite(cfg, tests, seedList)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+verification\\run_acceptance_suite.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "export_hdl_vectors",
+    "group": "15 验证与可追溯输出",
+    "design_signature": "manifest = export_hdl_vectors(signals, events, arithmeticCfg, outDir)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+verification\\export_hdl_vectors.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "write_run_manifest",
+    "group": "15 验证与可追溯输出",
+    "design_signature": "manifest = write_run_manifest(cfg, files, versions, seeds, reports)",
+    "status": "IMPLEMENTED_BASELINE",
+    "file": "E:\\AWAY\\matlab\\calibrator_sim\\+rtsim\\+verification\\write_run_manifest.m",
+    "scope": "接口基线已实现，具体保真度和限制见源码及模块报告；不等同原职责全部子场景验收。"
+  },
+  {
+    "name": "ddc_big_channel",
+    "group": "16 待确认兼容或扩展接口（默认不作为基线要求）",
+    "design_signature": "[out, st] = ddc_big_channel(in, st, cfgLegacy)",
+    "status": "NOT_APPLICABLE_OPTIONAL",
+    "file": "",
+    "scope": "原设计待确认扩展，默认关闭，未伪造实现。"
+  },
+  {
+    "name": "ddc_sub_channel",
+    "group": "16 待确认兼容或扩展接口（默认不作为基线要求）",
+    "design_signature": "[out, st] = ddc_sub_channel(in, st, cfgLegacy)",
+    "status": "NOT_APPLICABLE_OPTIONAL",
+    "file": "",
+    "scope": "原设计待确认扩展，默认关闭，未伪造实现。"
+  },
+  {
+    "name": "cfar_detect",
+    "group": "16 待确认兼容或扩展接口（默认不作为基线要求）",
+    "design_signature": "[candidates, diag] = cfar_detect(power, cfgCfar, timeGrid)",
+    "status": "NOT_APPLICABLE_OPTIONAL",
+    "file": "",
+    "scope": "原设计待确认扩展，默认关闭，未伪造实现。"
+  },
+  {
+    "name": "correlated_weather_source_step",
+    "group": "16 待确认兼容或扩展接口（默认不作为基线要求）",
+    "design_signature": "[hv, st] = correlated_weather_source_step(st, covarianceSpectrum, grid)",
+    "status": "NOT_APPLICABLE_OPTIONAL",
+    "file": "",
+    "scope": "原设计待确认扩展，默认关闭，未伪造实现。"
+  },
+  {
+    "name": "dpd_step",
+    "group": "16 待确认兼容或扩展接口（默认不作为基线要求）",
+    "design_signature": "[out, st, diag] = dpd_step(in, st, estimatedPaInverse)",
+    "status": "NOT_APPLICABLE_OPTIONAL",
+    "file": "",
+    "scope": "原设计待确认扩展，默认关闭，未伪造实现。"
+  },
+  {
+    "name": "nearfield_channel_step",
+    "group": "16 待确认兼容或扩展接口（默认不作为基线要求）",
+    "design_signature": "[out, st, diag] = nearfield_channel_step(in, geometry, fieldData, st)",
+    "status": "NOT_APPLICABLE_OPTIONAL",
+    "file": "",
+    "scope": "原设计待确认扩展，默认关闭，未伪造实现。"
+  }
+]

@@ -1,0 +1,41 @@
+id,name,status,scope
+T01,配置,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T02,输入资料,BLOCKED_MISSING_DATA,缺少原始实测/板卡/RTL输入；理想假设或软件测试不能替代。
+T03,样点时间,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T04,坐标,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T05,坐标基,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T06,方向图,BLOCKED_MISSING_DATA,缺少原始实测/板卡/RTL输入；理想假设或软件测试不能替代。
+T07,极化,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T08,单程链路,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T09,多径,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T10,波形检测,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T11,线性保护,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T12,噪声,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T13,转换器频率,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T14,分块不变性,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T15,时延记账,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T16,MTS通道,BLOCKED_MISSING_DATA,缺少原始实测/板卡/RTL输入；理想假设或软件测试不能替代。
+T17,三档资格,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T18,RAM生命周期,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T19,检测PDW,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T20,虚拟距离,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T21,调度,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T22,数据流,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T23,相位多普勒,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T24,校准,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T25,相参信号源,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T26,安全配置,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T27,真值隔离,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T28,定点HDL,BLOCKED_MISSING_DATA,缺少原始实测/板卡/RTL输入；理想假设或软件测试不能替代。
+T29,雷达解算,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T30,B到A退化,PASS,相同配置、种子和静止平台下 A/B 波形与 PDW 一致。
+T31,姿态,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T32,运动杆臂,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T33,温度供电,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T34,EMC时钟导航,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T35,机体散射,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T36,计量统计,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。
+T37,随机极化,NOT_APPLICABLE,可选随机天气与频率子信道未启用。
+T38,适用域,BLOCKED_MISSING_DATA,缺少原始实测/板卡/RTL输入；理想假设或软件测试不能替代。
+T39,频率子信道,NOT_APPLICABLE,可选随机天气与频率子信道未启用。
+T40,任务存储,NOT_RUN,部分算法由 automatic_tests.csv 验证；原规格完整子场景尚未全部执行。

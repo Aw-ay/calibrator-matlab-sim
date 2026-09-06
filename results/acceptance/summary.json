@@ -1,0 +1,9 @@
+{
+  "automatic": {
+    "total": 93,
+    "passed": 93,
+    "failed": 0,
+    "incomplete": 0
+  },
+  "scope": "自动测试结果按真实运行统计；原规格覆盖不自动升级为 PASS。"
+}

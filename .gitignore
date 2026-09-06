@@ -1,0 +1,13 @@
+# MATLAB 编辑器临时文件和开发过程日志
+*.asv
+*.log
+*.m~
+.DS_Store
+Thumbs.db
+
+# 只发布最终验证记录和两组已完成的演示
+/results/*
+!/results/acceptance/
+!/results/A_20260906_192845_354/
+!/results/B_20260906_192859_646/
+/results/acceptance/test_results.mat
