@@ -1,5 +1,6 @@
 classdef SystemSamplingTest < matlab.unittest.TestCase
     % 正式RFSoC系统等效采样与物理时序的独立回归。
+
     methods (Test)
 
         function rateRelations(test)
@@ -47,6 +48,7 @@ classdef SystemSamplingTest < matlab.unittest.TestCase
                 parts = cat(1, parts, y);
                 first = first + count;
             end
+
             test.verifyEqual(parts, whole, 'AbsTol', 1e-14);
         end
 
@@ -101,6 +103,7 @@ classdef SystemSamplingTest < matlab.unittest.TestCase
                 test.verifyLessThanOrEqual(abs(a.capture.([name '_samples']) / a.pl.output_fs_Hz - ...
                     b.capture.([name '_samples']) / b.pl.output_fs_Hz), 1 / b.pl.output_fs_Hz);
             end
+
             b.capture.end_hold_s = 3e-6;
             b = rtsim.config.derive_config(b);
             test.verifyEqual(b.capture.end_hold_samples, round(3e-6 * b.pl.output_fs_Hz));
@@ -151,6 +154,7 @@ classdef SystemSamplingTest < matlab.unittest.TestCase
             for k = 1:3
                 c.instrument.ranges.response(:, :, k) = [1.3 * exp(.4i), .02; .01i, .7 * exp(-.2i)];
             end
+
             c.target.polar_matrix = [1, .2i; .3, .7 * exp(.4i)];
             for basis = eye(2)
                 c.radar.polarization = basis;
@@ -172,6 +176,7 @@ classdef SystemSamplingTest < matlab.unittest.TestCase
                     test.verifyLessThan(a.relative_rms_error, 1e-3);
                 end
             end
+
             b = rtsim.ddc.rfdc_adc_specialty('jitter_rms_s', 1e-12, 'bits', 8);
             test.verifyGreaterThan(b.relative_rms_error, a.relative_rms_error);
         end
@@ -234,6 +239,7 @@ classdef SystemSamplingTest < matlab.unittest.TestCase
         end
 
     end
+
     methods (Static)
 
         function obs = interruptedObservation(t)

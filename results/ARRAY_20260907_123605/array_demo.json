@@ -1,0 +1,117 @@
+{
+  "calibration": {
+    "tx_holdout_before": 0.17582714370886773,
+    "rx_holdout_before": 0.16357919090955197,
+    "tx_holdout_after": 5.0000316192415979E-11,
+    "rx_holdout_after": 5.0000294003179906E-11,
+    "qualification": "独立正交编码训练与偏移编码留出；仅通道复增益拟合"
+  },
+  "beams": [
+    {
+      "command_az_deg": 0,
+      "before": {
+        "pointing_deg": 0.79999999999999716,
+        "hpbw_deg": 26.452070093678678,
+        "sll_dB": -11.383978646514505,
+        "main_lobe_exclusion_deg": [
+          -29.4,
+          31
+        ],
+        "sll_definition": "主瓣排除至两侧首个局部极小值；切面覆盖不足则NaN"
+      },
+      "after": {
+        "pointing_deg": 0.19999999999998863,
+        "hpbw_deg": 26.322038302786165,
+        "sll_dB": -11.049311626764853,
+        "main_lobe_exclusion_deg": [
+          -30,
+          30
+        ],
+        "sll_definition": "主瓣排除至两侧首个局部极小值；切面覆盖不足则NaN"
+      },
+      "polarization_and_power": {
+        "angles_deg": [
+          0,
+          0
+        ],
+        "tx_feed_power_per_port": [
+          1,
+          1.0000000000000004
+        ],
+        "rx_noise_weight_power": [
+          1.0000000000000002,
+          1.0000000000000002
+        ],
+        "element_count": 16,
+        "qualification": "SYNTHETIC_NOT_MEASURED",
+        "normalization": "每激励极化sum(abs(w_tx).^2)=1；Rx白噪声权范数=1",
+        "eirp_W_per_port": [
+          16.055145187561184,
+          15.586456287853418
+        ],
+        "g_over_t_dB_per_K": [
+          null,
+          null
+        ],
+        "noise_qualification": "MISSING_NOISE_TEMPERATURE",
+        "zdr_dB": 0.012033277958149407,
+        "phidp_deg": 1.573526771502211E-15
+      }
+    },
+    {
+      "command_az_deg": 25,
+      "before": {
+        "pointing_deg": 26,
+        "hpbw_deg": 29.734039396557741,
+        "sll_dB": -11.669123045974088,
+        "main_lobe_exclusion_deg": [
+          -3.7999999999999972,
+          69.8
+        ],
+        "sll_definition": "主瓣排除至两侧首个局部极小值；切面覆盖不足则NaN"
+      },
+      "after": {
+        "pointing_deg": 25.200000000000003,
+        "hpbw_deg": 29.370928302751931,
+        "sll_dB": -11.558163428542528,
+        "main_lobe_exclusion_deg": [
+          -4.3999999999999915,
+          67.4
+        ],
+        "sll_definition": "主瓣排除至两侧首个局部极小值；切面覆盖不足则NaN"
+      },
+      "polarization_and_power": {
+        "angles_deg": [
+          25,
+          0
+        ],
+        "tx_feed_power_per_port": [
+          0.99999999999999978,
+          1.0000000000000004
+        ],
+        "rx_noise_weight_power": [
+          1.0000000000000002,
+          1.0000000000000002
+        ],
+        "element_count": 16,
+        "qualification": "SYNTHETIC_NOT_MEASURED",
+        "normalization": "每激励极化sum(abs(w_tx).^2)=1；Rx白噪声权范数=1",
+        "eirp_W_per_port": [
+          16.607241440167055,
+          14.941469340698605
+        ],
+        "g_over_t_dB_per_K": [
+          null,
+          null
+        ],
+        "noise_qualification": "MISSING_NOISE_TEMPERATURE",
+        "zdr_dB": 0.67278008245005727,
+        "phidp_deg": 6.7799879680112278
+      }
+    }
+  ],
+  "qualification": "SYNTHETIC_FIXTURE_NOT_MEASURED_AEP_OR_HARDWARE_ACCEPTANCE",
+  "noise_qualification": "未提供真实系统噪声温度，G/T保持NaN",
+  "normalization": "每输入极化总馈入功率1W；Rx白噪声权范数1；校正后重新归一化",
+  "output_dir": "E:\\AWAY\\matlab\\calibrator_sim\\results\\ARRAY_20260907_123605"
+}

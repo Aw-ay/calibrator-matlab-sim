@@ -4,6 +4,7 @@ function cfg = default_config(profile)
     if nargin == 0
         profile = 'RFSoC_SYSTEM_EQUIVALENT';
     end
+
     cfg.schema_version = '2.0';
 
     cfg.seed = 20260906;
@@ -11,6 +12,7 @@ function cfg = default_config(profile)
     cfg.fidelity = 'ENVELOPE';
 
     cfg.profile = upper(char(profile));
+
     cfg.sampling_profile = cfg.profile;
 
     cfg.constants.c_mps = 299792458;
@@ -36,6 +38,25 @@ function cfg = default_config(profile)
     cfg.target.polar_matrix = eye(2);
     cfg.target.phase0_rad = 0;
     cfg.target.phase_policy = 'INDEPENDENT_DOPPLER';
+    cfg.target.reference_plane = 'RP2_OTA';
+
+    % 物理方向图与控制器名义标定模型分开，控制器不能读取真实方向图。
+
+    cfg.antenna.pattern = struct('kind', 'IDEAL');
+    cfg.antenna.calibration_pattern = struct('kind', 'IDEAL');
+    cfg.antenna.mounting = struct('roll_offset_deg', 0, 'pitch_offset_deg', 0, ...
+        'yaw_offset_deg', 0, 'phase_center_ant_m', [0; 0; 0]);
+    cfg.antenna.lever_arm_body_m = [0; 0; 0];
+    cfg.antenna.vibration = struct('roll_deg', 0);
+    cfg.antenna.excitation_mode_only = false;
+    cfg.antenna.max_inverse_gain = 100;
+
+    cfg.radar.array = rtsim.radar_array.default_array_config(cfg.radar.fc_Hz, [1 1]);
+
+    cfg.replay.interpolation_method = 'LINEAR';
+    cfg.replay.interpolation_order = 7;
+
+    cfg.calibration.wideband.enabled = false;
 
     cfg.instrument.mode = 'DRFM';
     cfg.instrument.half_duplex = true;
@@ -43,6 +64,7 @@ function cfg = default_config(profile)
     cfg.instrument.isolated_ports = false;
     cfg.instrument.physical_loopback = false;
     cfg.instrument.fixed_latency_s = 1e-6;
+    cfg.instrument.tx_rf_tail_bound_samples = 0;
     cfg.instrument.ranges.gains = [1e5, 1e4, 1e3];
     cfg.instrument.ranges.response = repmat([1, 0.005; 0.003, 0.98 * exp(0.04i)], 1, 1, 3);
     cfg.instrument.ranges.noise_power_W = 0;
@@ -86,6 +108,10 @@ function cfg = default_config(profile)
     cfg.platform.acceleration_mps2 = [0; 0; 0];
     cfg.platform.roll_deg = 0;
     cfg.platform.roll_rate_dps = 0;
+    cfg.platform.pitch_deg = 0;
+    cfg.platform.yaw_deg = 0;
+    cfg.platform.pitch_rate_dps = 0;
+    cfg.platform.yaw_rate_dps = 0;
 
     cfg.navigation.delay_s = 0;
     cfg.navigation.position_bias_m = zeros(3, 1);
@@ -127,11 +153,15 @@ function cfg = default_config(profile)
     cfg.acceptance.range_tolerance_m = 30;
 
     cfg.rf.fc_Hz = 2.8e9;
+
     cfg.baseband.usable_bandwidth_Hz = 20e6;
+
     cfg.adc.fs_real_Hz = 4e9;
+
     cfg.rfdc.output_fs_Hz = 500e6;
     cfg.rfdc.samples_per_clock = 8;
     cfg.rfdc.interface_clock_Hz = 62.5e6;
+
     cfg.pl.decimation = 8;
     cfg.pl.output_fs_Hz = 62.5e6;
     cfg.pl.output_samples_per_clock = 1;
@@ -140,15 +170,19 @@ function cfg = default_config(profile)
             cfg.rfdc.output_fs_Hz = 20e6;
             cfg.rfdc.samples_per_clock = 1;
             cfg.rfdc.interface_clock_Hz = 20e6;
+
             cfg.pl.decimation = 1;
             cfg.pl.output_fs_Hz = 20e6;
+
             cfg.baseband.usable_bandwidth_Hz = 5e6;
+
             cfg.capture.bank_capacity_samples = 2048;
             cfg.capture.max_pulse_s = 80e-6;
         case 'RFSOC_SYSTEM_EQUIVALENT'
         otherwise
             error('rtsim:SamplingProfile', '未知采样档：%s', profile);
     end
+
     cfg = rtsim.config.derive_config(cfg);
-    cfg.reference_planes = {'RP1_RX', 'ADC_RAW', 'PL_FILTERED_RAW', 'RP1_TX', 'RADAR_RX'};
+    cfg.reference_planes = {'RP1_RX', 'ADC_RAW', 'PL_FILTERED_RAW', 'RP1_TX', 'RP2_OTA', 'RADAR_RX'};
 end

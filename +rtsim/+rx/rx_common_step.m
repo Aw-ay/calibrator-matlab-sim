@@ -16,6 +16,7 @@ function [out, st, diag] = rx_common_step(portIQ, st, cfgRf, plantCond)
     assert(isscalar(limit) && limit > 0, 'rtsim:rx:InvalidCommonConfig', 'saturation_amplitude 必须为正。');
 
     % 每个样点一次取出全部 H/V 的实虚部，使固定随机种子时块切分不改变序列。
+
     [unitNoise, st] = localComplexNoise(size(portIQ), st, 1001);
     noise = sqrt(noisePower / 2) .* unitNoise;
     beforeClip = gain .* double(portIQ) + noise;

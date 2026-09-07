@@ -58,6 +58,7 @@ function manifest = write_run_manifest(cfg, files, versions, seeds, reports)
         'reports', reports, 'files', records);
 
     % 返回值与 JSON 使用同一可序列化结构，复数可按 encoding/real/imag/size 还原。
+
     manifest = localSerializable(rawManifest);
     jsonPath = fullfile(outCanonical, 'run_manifest.json');
     fid = fopen(jsonPath, 'wb');
@@ -147,6 +148,7 @@ end
 
 function out = localSerializable(in)
     % 递归转换复数；对未知对象明确拒绝，禁止静默转成字符串。
+
     if isnumeric(in)
         if ~isreal(in)
             out = struct('encoding', "complex", 'real', full(real(in)), ...

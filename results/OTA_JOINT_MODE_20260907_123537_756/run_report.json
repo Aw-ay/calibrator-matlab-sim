@@ -1,0 +1,175 @@
+{
+  "stage": "OTA_JOINT_MODE",
+  "created_at": "2026-09-07 12:35:37",
+  "model_scope": "ENVELOPE；显式RP1/RP2复场与阵列；ZYX姿态/杆臂相位中心；可选宽带FIR校准；块内冻结运动；行为级bank/DMA；硬件资格未验证",
+  "observables": {
+    "range_per_pulse_m": 20000.708265693498,
+    "range_m": 20000.708265693498,
+    "power_W": [
+      4.7341004127873446E-21,
+      3.509437119346175E-17
+    ],
+    "ZDR_dB": -38.700000000000017,
+    "PhiDP_deg": 82.914999999999978,
+    "doppler_Hz": null,
+    "velocity_mps": null,
+    "rho_HV": 1,
+    "rho_scope": "仅确定性相干信号相关性，不构成随机天气相关系数验收",
+    "reflectivity_status": "NOT_APPLICABLE",
+    "range_kind": "当前门内表观距离"
+  },
+  "diagnostics": {
+    "rejected_replays": 0,
+    "dropped_captures": 0,
+    "bank_highwater": 1,
+    "dma_pending_bytes": 2.6958435483948051E-10,
+    "dma_completed_bytes": 7151.9999999997308,
+    "tx_clipped_samples": 0,
+    "invalid_ranges": 0
+  },
+  "scores": {
+    "range_error_m": 0.708265693498106,
+    "range_pass": true
+  },
+  "audit": {
+    "model": "假设复包络参考模型",
+    "profile": "RFSOC_SYSTEM_EQUIVALENT",
+    "project_root": "E:\\AWAY\\matlab\\calibrator_sim",
+    "pattern_status": "PARTIAL_EXCITATION_FIELD_PENDING_METADATA",
+    "calibration_status": "SYNTHETIC_MEASUREMENTS",
+    "hardware_status": "BLOCKED_MISSING_DATA",
+    "missing": [
+      "实测全极化复方向图",
+      "独立实测 RX/TX 校准数据",
+      "精确板卡与 RTL 配置",
+      "原文 assets 图像"
+    ],
+    "pattern_note": "已提供2.8GHz联合HV激励场；相对激励幅相、极化基和独立激励场待确认。"
+  },
+  "latency_ledger": {
+    "physical_roundtrip_s": 1.3342563807926082E-5,
+    "physical_roundtrip_last_s": 1.3342563807926082E-5,
+    "physical_reference": "实际天线相位中心；首块与末块冻结几何",
+    "virtual_roundtrip_s": 0.00013342563807926082,
+    "fixed_device_s": 1E-6,
+    "note": "物理采样标签扣FIR群延迟一次；可用时间保留FIR/EOP；命令先于目标TX固定流水时间"
+  },
+  "phase_ledger": {
+    "propagation": "每条单程路径产生 -2*pi*fc*tau",
+    "replay": "目标相位减已建模相位；独立多普勒减估计物理多普勒",
+    "motion": "短块冻结几何近似，非完整连续光行时闭环"
+  },
+  "sampling": {
+    "adc_real_Hz": 4.0E+9,
+    "rfdc_complex_Hz": 5.0E+8,
+    "rfdc_spc": 8,
+    "pl_clock_Hz": 6.25E+7,
+    "pl_decimation": 8,
+    "core_complex_Hz": 6.25E+7,
+    "core_spc": 1,
+    "usable_baseband_Hz": 2.0E+7
+  },
+  "radar_limits": {
+    "prf_Hz": 1000,
+    "unambiguous_range_m": 149896.229,
+    "nyquist_velocity_mps": 26.767183749999997,
+    "range_resolution_m": 149.896229,
+    "sample_grid_m": 2.398339664
+  },
+  "frontend": {
+    "input_fs_Hz": 5.0E+8,
+    "output_fs_Hz": 6.25E+7,
+    "layout": "clock x lane x H/V x range",
+    "samples_per_clock": 8,
+    "decimation": 8,
+    "fir_taps": 145,
+    "group_delay_s": 1.44E-7,
+    "input_samples": 100000,
+    "output_samples": 12500,
+    "passband_ripple_dB": 0.0031085526273360144,
+    "stopband_attenuation_dB": 75.4947909141083
+  },
+  "ota": {
+    "target_reference_plane": "RP1",
+    "pattern_kind": "CST_FARFIELD",
+    "has_full_jones": false,
+    "quality_label": "UNVERIFIED_EXCITATION_MODE",
+    "excitation_mode_only": true,
+    "last_pattern_query": {
+      "az_deg": 0,
+      "el_deg": 90,
+      "validity": {
+        "valid": true,
+        "reason": "COMPLEX_REGULAR_GRID",
+        "extrapolated": false,
+        "has_phase": true,
+        "has_full_jones": false,
+        "full_polarization_qualified": false,
+        "metadata_verified": false,
+        "mode": "EXCITATION_MODE_ONLY",
+        "basis": "LUDWIG3"
+      },
+      "normalization": "SQRT_REALIZED_GAIN_POWER_WAVE",
+      "receive_relation": "RECIPROCAL_TRANSPOSE_COMMON_REAL_FIELD_BASIS",
+      "local_basis": "LUDWIG3",
+      "propagation_basis": "ENU_PROJECTED_YZ",
+      "basis_rotation": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "direction_convention": "OUTWARD_FROM_ANTENNA",
+      "theta_deg": 0,
+      "phi_deg": 0
+    },
+    "pose_columns": "t,truth_phase_center_xyz,observed_phase_center_xyz,truth_wxyz,observed_wxyz",
+    "source_file": [
+      "E:\\AWAY\\matlab\\calibrator_sim\\uav_pattern\\farfield_resolution1deg.txt"
+    ],
+    "source_sha256": [
+      "f6ce3b27953f868b9ff1336fb8e43ff969d90b2680b36b661c0c9342f5ca3b79"
+    ],
+    "pole_check": {
+      "evaluated": true,
+      "north_relative_spread": 3.5331465103175907E-15,
+      "south_relative_spread": 0.00038022934885151364,
+      "tolerance_note": "Diagnostic only: source phase origin and basis still require independent confirmation."
+    },
+    "excitation": "JOINT_HV",
+    "metadata_verified": false
+  },
+  "array": {
+    "angles_deg": [
+      0,
+      0
+    ],
+    "tx_feed_power_per_port": [
+      1,
+      1
+    ],
+    "rx_noise_weight_power": [
+      1,
+      1
+    ],
+    "element_count": 1,
+    "qualification": "SYNTHETIC_NOT_MEASURED",
+    "normalization": "每激励极化sum(abs(w_tx).^2)=1；Rx白噪声权范数=1",
+    "eirp_W_per_port": [
+      1,
+      1
+    ],
+    "g_over_t_dB_per_K": [
+      null,
+      null
+    ],
+    "noise_qualification": "MISSING_NOISE_TEMPERATURE",
+    "zdr_dB": 0,
+    "phidp_deg": 0
+  },
+  "wideband_enabled": false
+}

@@ -16,3 +16,9 @@ Thumbs.db
 !/results/A_20260906_220906_295/
 !/results/B_20260906_221221_083/
 !/results/ADC_RFDC_20260906_221225_188/
+
+# OTA、阵列与宽带升级的最终验证输出
+!/results/OTA_JOINT_MODE_20260907_123537_756/
+!/results/WIDEBAND_SYSTEM_20260907_123555_083/
+!/results/ARRAY_20260907_123605/
+!/results/ota_wideband/

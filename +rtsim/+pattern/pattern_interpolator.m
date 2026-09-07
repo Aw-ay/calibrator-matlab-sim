@@ -2,6 +2,12 @@ function [response, validity] = pattern_interpolator(patterns, query)
     % PATTERN_INTERPOLATOR 对复Jones场作局部反距离插值。
     % 插值限制在实测角频包络内，不跨越未测区域外推；方位距离按360度周期计算。
 
+    if strcmpi(patterns.kind, 'CST_FARFIELD')
+        [response, validity] = rtsim.pattern.sample_farfield(patterns, ...
+            90 - query.el_deg, query.az_deg, query.freq_Hz);
+        return
+    end
+
     if strcmpi(patterns.kind, 'IDEAL')
         response = eye(2);
         validity = struct('valid', true, 'reason', 'IDEAL_MODEL', 'extrapolated', false);

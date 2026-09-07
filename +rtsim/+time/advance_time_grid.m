@@ -20,6 +20,7 @@ function gridNext = advance_time_grid(grid, count)
     fracNumerator = rem(smallProduct, den);
 
     % 初始分数只在一个 tick 内以 double 保存，不参与大整数绝对计数。
+
     frac = grid.fraction0_ticks + double(fracNumerator) / double(den);
     carry = uint64(floor(frac));
     frac = frac - double(carry);

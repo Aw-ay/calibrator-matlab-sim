@@ -1,0 +1,2 @@
+pulse_id,range_id,toa_s,width_s,peak_power_W_1,peak_power_W_2,mean_power_W_1,mean_power_W_2,center_frequency_Hz,chirp_rate_Hz_per_s,reference_plane,units,edge_definition,calibration_id,available_at_s
+1,1,2.6672e-05,1e-05,4.68205210303499e-11,9.14497438963488e-18,4.19499370508749e-11,3.25371240845813e-18,-725.989670936668,99998956053.242,RP1_RX,sqrt_W,half_amplitude,rx-cal-20260907,3.8816e-05

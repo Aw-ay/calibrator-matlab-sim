@@ -1,5 +1,6 @@
 function result = run_adc_rfdc_demo()
     % 独立运行4GS/s短窗专项；不在长时间A/B主链中展开实RF样点。
+
     root = fileparts(mfilename('fullpath'));
     originalPath = path;
     restorePath = onCleanup(@() path(originalPath));

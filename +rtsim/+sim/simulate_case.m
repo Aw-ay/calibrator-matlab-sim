@@ -19,6 +19,8 @@ function result = simulate_case(cfg, worldProvider, observationProvider)
     forwardCfg.fs_Hz = inputFs;
     count = ceil(cfg.sim.duration_s * fs);
     c = cfg.constants.c_mps;
+    patterns = rtsim.pattern.load_pattern_config(cfg.antenna.pattern);
+    nominalPatterns = rtsim.pattern.load_pattern_config(cfg.antenna.calibration_pattern);
     result.config = cfg;
     if isa(worldProvider, 'function_handle')
         result.stage = 'CUSTOM';
@@ -29,6 +31,7 @@ function result = simulate_case(cfg, worldProvider, observationProvider)
     result.audit = rtsim.config.audit_inputs(fileparts(fileparts(fileparts(mfilename('fullpath')))), cfg);
 
     % 校准实验使用独立标准源及独立随机会话，拟合器不接收真实矩阵。
+
     plant.rx_response = cfg.instrument.ranges.response;
     for r = 1:3
         plant.rx_response(:, :, r) = plant.rx_response(:, :, ...
@@ -45,12 +48,36 @@ function result = simulate_case(cfg, worldProvider, observationProvider)
     holdout = rtsim.calibration.simulate_calibration_session(plant, cfg.calibration, tasks, cfg.seed + 2);
     calReport = rtsim.calibration.validate_calibration(struct('rx', calRx, 'tx', calTx), holdout, ...
         struct('max_rmse', 1e-3));
+    if cfg.calibration.wideband.enabled
+        if ~strcmp(cfg.instrument.mode, 'DRFM')
+            error('rtsim:WidebandMode', '当前宽带校准主链仅支持完整捕获后的DRFM回放。');
+        end
+
+        calRx.wideband = cfg.calibration.wideband.rx;
+        calTx.wideband = cfg.calibration.wideband.tx;
+        if calRx.wideband.sample_rate_hz ~= fs || calTx.wideband.sample_rate_hz ~= fs
+            error('rtsim:WidebandSampleRate', '宽带校准系数的采样率必须等于当前核心采样率。');
+        end
+
+        query = struct('temperature_c', cfg.environment.temperature_C, ...
+            'power_dbm', cfg.calibration.wideband.operating_power_dbm, ...
+            'frequency_hz', [-1; 1] * cfg.radar.bandwidth_Hz / 2);
+        validateattributes(cfg.instrument.tx_rf_tail_bound_samples, {'numeric'}, ...
+            {'scalar', 'integer', 'nonnegative', 'finite'});
+        if size(cfg.calibration.wideband.tx_plant_coeff, 1) - 1 > cfg.instrument.tx_rf_tail_bound_samples
+            error('rtsim:WidebandRfTail', '物理TX网络尾长超过独立声明的调度上限。');
+        end
+    end
+
     coreCfg = cfg;
 
     % 核心只保留名义量程增益；移除真实串扰/发射链/平台导航模型。
+
     coreCfg.instrument.ranges = rmfield(coreCfg.instrument.ranges, 'response');
     coreCfg.instrument = rmfield(coreCfg.instrument, 'tx_response');
-    coreCfg = rmfield(coreCfg, {'platform', 'navigation', 'environment'});
+    coreCfg = rmfield(coreCfg, {'platform', 'navigation', 'environment', 'antenna'});
+    coreCfg.radar = rmfield(coreCfg.radar, 'array');
+    coreCfg.calibration = rmfield(coreCfg.calibration, 'wideband');
     st = rtsim.sim.init_state(cfg);
     forward = struct();
     backward = struct();
@@ -66,11 +93,14 @@ function result = simulate_case(cfg, worldProvider, observationProvider)
     ddcState = struct();
     decimatorState = struct();
     sensorState = struct('seed', cfg.seed + 13);
+    rxFrequencyState = [];
+    txFrequencyState = [];
     result.radar_tx = complex(zeros(count, 2));
     result.port_rx = result.radar_tx;
     result.tx_iq = result.radar_tx;
     result.radar_iq = result.radar_tx;
     trajectoryLog = zeros(ceil(count / cfg.sim.block_size), 9);
+    poseLog = zeros(ceil(count / cfg.sim.block_size), 15);
     bindex = 0;
     temperature = cfg.environment.temperature_C;
     for first = 1:cfg.sim.block_size:count
@@ -87,6 +117,7 @@ function result = simulate_case(cfg, worldProvider, observationProvider)
         end
 
         % 生成已经延迟到达的观测：仅取 t-delay 的状态，外推使用观测速度。
+
         sensorGrid = grid;
         sensorGrid.index0 = (t - cfg.navigation.delay_s) * fs;
         [pastTruth, ~] = rtsim.airborne.platform_truth_step(struct(), cfg.platform, struct('roll_amplitude_deg', ...
@@ -94,6 +125,7 @@ function result = simulate_case(cfg, worldProvider, observationProvider)
         [message, sensorState] = rtsim.airborne.nav_sensor_step(pastTruth, sensorState, cfg.navigation);
 
         % 合成消息的到达时刻按构造恰为 t，消除减后再加造成的浮点末位差。
+
         message.available_time_s = t;
         if isa(worldProvider, 'function_handle') && isempty(observationProvider)
             error('rtsim:IndependentObservation', '自定义物理 provider 必须提供独立观测 provider。');
@@ -109,16 +141,15 @@ function result = simulate_case(cfg, worldProvider, observationProvider)
         else
 
             % 无有效导航时保留名义安全位置，关闭发射而非用真值替代。
+
             estimate = struct('position_m', cfg.navigation.initial_position_m, 'velocity_mps', zeros(3, 1), ...
                 'roll_deg', 0);
         end
 
-        R = norm(truth.position_m);
+        link = rtsim.sim.ota_link_state(cfg, patterns, nominalPatterns, truth, estimate, t);
+        estimate = link.estimate;
+        R = norm(link.position_m);
         estimatedR = norm(estimate.position_m);
-        angleTrue = truth.roll_deg * pi / 180;
-        angleEstimate = estimate.roll_deg * pi / 180;
-        J = [cos(angleTrue), sin(angleTrue); -sin(angleTrue), cos(angleTrue)];
-        Je = [cos(angleEstimate), sin(angleEstimate); -sin(angleEstimate), cos(angleEstimate)];
         inputGrid = grid;
         inputGrid.index0 = index0 * d;
         inputGrid.fs_Hz = inputFs;
@@ -126,18 +157,39 @@ function result = simulate_case(cfg, worldProvider, observationProvider)
         inputGrid.step_num = cfg.time.f_gsc_Hz / inputFs;
         [radarNative, ~, source] = rtsim.source.radar_tx_step(source, cfg.radar, inputGrid);
         radarTx = radarNative(1:d:end, :);
-        geometry = struct('tx_position_m', zeros(3, 1), 'rx_position_m', truth.position_m, 'tx_jones', eye(2), ...
-            'rx_jones', J);
+        geometry = struct('tx_position_m', zeros(3, 1), 'rx_position_m', link.position_m, ...
+            'tx_jones', link.tx_radar, 'rx_jones', link.rx_uav);
         [port, forward, forwardDiag] = rtsim.channel.channel_step(radarNative, forward, forwardCfg, geometry);
         temperature = cfg.environment.ambient_C + (temperature - cfg.environment.ambient_C) * ...
             exp(-n / fs / cfg.environment.thermal_tau_s);
         condition.temperature_C = temperature;
+        if cfg.calibration.wideband.enabled
+            query.temperature_c = temperature;
+            incomingDoppler = -dot(estimate.position_m, estimate.velocity_mps) / estimatedR * cfg.radar.fc_Hz / c;
+            if strcmp(cfg.channel.kind, 'CABLE')
+                incomingDoppler = 0;
+            end
+
+            bandEdges = [-1; 1] * cfg.radar.bandwidth_Hz / 2;
+            query.frequency_hz = bandEdges + incomingDoppler;
+            query.range_index = 1:3;
+            rtsim.calibration.validate_frequency_domain(calRx.wideband, query);
+            query.frequency_hz = bandEdges + cfg.target.doppler_Hz - incomingDoppler;
+            query.range_index = cfg.calibration.wideband.tx_range_index;
+            rtsim.calibration.validate_frequency_domain(calTx.wideband, query);
+        end
+
         rfCfg = cfg.instrument.common;
         rfCfg.gain = rfCfg.gain * 10^(cfg.environment.gain_temp_dB_per_C * (temperature - 25) / 20);
         localTime = (index0 * d + (0:n * d - 1)') / inputFs;
         port = port + cfg.environment.emc_amplitude * ...
             exp(1i * 2 * pi * cfg.environment.emc_frequency_Hz * localTime) * [1, 1] / sqrt(2);
         [common, rxst] = rtsim.rx.rx_common_step(port, rxst, rfCfg, condition);
+        if cfg.calibration.wideband.enabled
+            [common, rxFrequencyState] = rtsim.calibration.apply_mimo_fir(common, rxFrequencyState, ...
+                cfg.calibration.wideband.rx_plant_coeff);
+        end
+
         [ranges, rangest] = rtsim.rx.rx_three_range_step(common, rangest, cfg.instrument.ranges, condition);
         if cfg.instrument.adc.enabled
             [native, adcst] = rtsim.rx.adc_pipeline(ranges, adcst, cfg.instrument.adc, []);
@@ -146,6 +198,7 @@ function result = simulate_case(cfg, worldProvider, observationProvider)
         end
 
         % 默认基带 DDC 为零频移旁路；原生复 ADC 不做未经定义的额外共轭。
+
         [native, ddcState] = rtsim.ddc.nco_mixer(native, ddcState, struct('frequency_Hz', 0, 'phase0_rad', 0, ...
             'sign', -1), inputGrid);
         packed = rtsim.ddc.pack_spc(native, cfg.rfdc.samples_per_clock);
@@ -165,7 +218,7 @@ function result = simulate_case(cfg, worldProvider, observationProvider)
         end
 
         control.phase = struct('fc_Hz', cfg.radar.fc_Hz, 'phase_rad', modeledPhase, 'doppler_Hz', modeledDoppler);
-        control.polar_operator = Je * cfg.target.polar_matrix * Je.';
+        control.polar_operator = link.polar_operator;
         rxStarts = cfg.radar.start_s + (0:cfg.radar.pulse_count - 1) * cfg.radar.pri_s + ...
             control.geometry.roundtrip_delay_s / 2;
         control.rx_windows = [rxStarts(:) - cfg.safety.guard_s, ...
@@ -179,18 +232,35 @@ function result = simulate_case(cfg, worldProvider, observationProvider)
             cfg.instrument.tx_limit, ...
             'ampm_rad_at_saturation', 0, 'monitor_coupling', 0.01);
         [transmitted, ~, txState, txDiagnostic] = rtsim.tx.tx_rf_step(analog, txState, rfTx, struct('gain_scale', 1));
+        if cfg.calibration.wideband.enabled
+            for sampleIndex = 1:n
+                if st.tx_allowed_mask(sampleIndex)
+                    [transmitted(sampleIndex, :), txFrequencyState] = rtsim.calibration.apply_mimo_fir( ...
+                        transmitted(sampleIndex, :), txFrequencyState, cfg.calibration.wideband.tx_plant_coeff);
+                else
+
+                    % 物理RF门位于有记忆网络之后，关闭时清空历史以免复开泄漏旧脉冲。
+
+                    transmitted(sampleIndex, :) = 0;
+                    txFrequencyState = [];
+                end
+            end
+        end
+
         st.diagnostics.tx_clipped_samples = st.diagnostics.tx_clipped_samples + txDiagnostic.clipped_samples;
-        geometry.tx_position_m = truth.position_m;
+        geometry.tx_position_m = link.position_m;
         geometry.rx_position_m = zeros(3, 1);
-        geometry.tx_jones = J.';
-        geometry.rx_jones = eye(2);
+        geometry.tx_jones = link.tx_uav;
+        geometry.rx_jones = link.rx_radar;
         [arriving, backward] = rtsim.channel.channel_step(transmitted, backward, cfg.channel, geometry);
         if cfg.environment.body_rcs_m2 > 0
 
             % 被动机体回波独立于仪器发射开关，幅度遵循单站雷达方程。
+
             lambda = c / cfg.radar.fc_Hz;
             gain = lambda * sqrt(cfg.environment.body_rcs_m2) / ((4 * pi)^(3 / 2) * R^2);
-            path = struct('delay_s', 2 * R / c, 'matrix', gain * exp(-1i * 4 * pi * R / lambda) * eye(2));
+            path = struct('delay_s', 2 * R / c, 'matrix', ...
+                gain * exp(-1i * 4 * pi * R / lambda) * link.rx_radar * link.tx_radar);
             [body, bodyst] = rtsim.channel.combine_complex_paths(radarTx, path, bodyst, grid);
             arriving = arriving + body;
         end
@@ -202,16 +272,21 @@ function result = simulate_case(cfg, worldProvider, observationProvider)
         result.radar_iq(first:first + n - 1, :) = arriving;
         bindex = bindex + 1;
         trajectoryLog(bindex, :) = [t, truth.position_m.', estimate.position_m.', truth.roll_deg, temperature];
+        poseLog(bindex, :) = [t, link.position_m.', estimate.position_m.', ...
+            link.truth_pose.quaternion_wxyz(:).', link.estimated_pose.quaternion_wxyz(:).'];
     end
 
     % 所有雷达端算法只在信号观测上解算；真值仅在最后的评分中使用。
+
     [gates, ~, compressionDiag] = rtsim.radar.range_compress_step(result.radar_iq, struct(), cfg.radar, ...
         struct('fs_Hz', fs));
     pulseTimes = cfg.radar.start_s + (0:cfg.radar.pulse_count - 1) * cfg.radar.pri_s;
     result.observables = rtsim.radar.radar_observable_estimator(gates, pulseTimes, cfg.radar);
     result.range_profile = gates;
     result.pdw = st.pdw;
+
     % 仿真结束只标记未执行或未完成，不伪造窗口外的实际发射事件。
+
     for recordId = 1:numel(st.records)
         if strcmp(st.records(recordId).replay_status, 'PENDING')
             st.records(recordId).replay_status = 'OUTSIDE_WINDOW';
@@ -219,10 +294,48 @@ function result = simulate_case(cfg, worldProvider, observationProvider)
             st.records(recordId).replay_status = 'WINDOW_TRUNCATED';
         end
     end
+
     result.records = st.records;
+    if cfg.calibration.wideband.enabled
+        for recordId = 1:numel(result.records)
+            rec = result.records(recordId);
+            beginIndex = max(1, floor(rec.t_tx_target_s * fs - rec.tx_calibration_latency_samples) + 1);
+            endIndex = min(count, ceil(rec.t_tx_target_s * fs + rec.count + ...
+                rec.tx_calibration_tail_samples + cfg.replay.interpolation_order + ...
+                size(cfg.calibration.wideband.tx_plant_coeff, 1)));
+            firstNonzero = [];
+            if rec.replay_accepted && endIndex >= beginIndex
+                firstNonzero = find(any(result.tx_iq(beginIndex:endIndex, :) ~= 0, 2), 1);
+            end
+
+            result.records(recordId).t_tx_first_nonzero_rf_s = NaN;
+            if ~isempty(firstNonzero)
+                result.records(recordId).t_tx_first_nonzero_rf_s = (beginIndex + firstNonzero - 2) / fs;
+            end
+        end
+    end
+
     result.rejections = st.rejections;
     result.diagnostics = st.diagnostics;
     result.platform_log = trajectoryLog;
+    result.ota = struct('target_reference_plane', cfg.target.reference_plane, ...
+        'pattern_kind', patterns.kind, 'has_full_jones', patterns.has_full_jones, ...
+        'quality_label', patterns.quality_label, 'excitation_mode_only', cfg.antenna.excitation_mode_only, ...
+        'last_pattern_query', link.pattern_meta, 'pose_log', poseLog, ...
+        'pose_columns', 't,truth_phase_center_xyz,observed_phase_center_xyz,truth_wxyz,observed_wxyz');
+    if isfield(patterns, 'source_file')
+        result.ota.source_file = patterns.source_file;
+    end
+
+    if isfield(patterns, 'source_sha256')
+        result.ota.source_sha256 = patterns.source_sha256;
+        result.ota.pole_check = patterns.pole_check;
+        result.ota.excitation = patterns.excited_port;
+        result.ota.metadata_verified = patterns.metadata_verified;
+    end
+
+    result.array = link.array_meta;
+    result.wideband_enabled = cfg.calibration.wideband.enabled;
     result.calibration = struct('rx', calRx, 'tx', calTx, 'holdout', calReport);
     response = abs(fft(cfg.pl.filter.coefficients, 65536));
     frequencies = (0:65535) * inputFs / 65536;
@@ -234,12 +347,15 @@ function result = simulate_case(cfg, worldProvider, observationProvider)
         'group_delay_s', cfg.pl.group_delay_s, 'input_samples', double(decimatorState.sample_count), ...
         'output_samples', count, 'passband_ripple_dB', 20 * log10(max(pass) / min(pass)), ...
         'stopband_attenuation_dB', -20 * log10(max(stop)));
-    result.latency_ledger = struct('physical_roundtrip_s', 2 * norm(cfg.platform.position_m) / c, ...
+    result.latency_ledger = struct('physical_roundtrip_s', 2 * norm(poseLog(1, 2:4)) / c, ...
+        'physical_roundtrip_last_s', 2 * norm(poseLog(end, 2:4)) / c, ...
+        'physical_reference', '实际天线相位中心；首块与末块冻结几何', ...
         'virtual_roundtrip_s', 2 * cfg.target.range_m / c, 'fixed_device_s', cfg.instrument.fixed_latency_s, ...
         'note', '物理采样标签扣FIR群延迟一次；可用时间保留FIR/EOP；命令先于目标TX固定流水时间');
     result.phase_ledger = struct('propagation', '每条单程路径产生 -2*pi*fc*tau', ...
         'replay', '目标相位减已建模相位；独立多普勒减估计物理多普勒', 'motion', '短块冻结几何近似，非完整连续光行时闭环');
-    result.model_scope = 'ENVELOPE；理想方向图；频率平坦校准；块内冻结运动；行为级 bank/DMA';
+    result.model_scope = ['ENVELOPE；显式RP1/RP2复场与阵列；ZYX姿态/杆臂相位中心；' ...
+        '可选宽带FIR校准；块内冻结运动；行为级bank/DMA；硬件资格未验证'];
     result.scores = struct('range_error_m', result.observables.range_m - cfg.target.range_m, ...
         'range_pass', abs(result.observables.range_m - cfg.target.range_m) <= cfg.acceptance.range_tolerance_m);
     result.forward_diagnostic = forwardDiag;

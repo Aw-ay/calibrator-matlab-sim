@@ -27,6 +27,7 @@ function report = run_acceptance_suite(cfg, tests, seedList)
     note([37, 39]) = {'可选随机天气与频率子信道未启用。'};
 
     % T30 是明确的独立退化断言，可由对应测试结果完整判定。
+
     idx = find(contains({results.Name}, 'stationaryRegression'));
     if ~isempty(idx) && all([results(idx).Passed])
         status{30} = 'PASS';

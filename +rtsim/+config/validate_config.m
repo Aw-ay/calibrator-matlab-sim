@@ -17,6 +17,7 @@ function report = validate_config(cfg, capabilities)
             cfg.rfdc.samples_per_clock == 8 && cfg.rfdc.interface_clock_Hz == 62.5e6 && ...
             cfg.pl.decimation == 8 && fs == 62.5e6, 'rtsim:RateMismatch', '正式档必须满足4G/8=500M、8SPC及D8→62.5M。');
     end
+
     cfg = rtsim.config.derive_config(cfg);
     if cfg.pl.decimation > 1
         response = abs(fft(cfg.pl.filter.coefficients, 65536));
@@ -27,6 +28,7 @@ function report = validate_config(cfg, capabilities)
             -20 * log10(max(stop)) >= cfg.pl.filter.min_stopband_attenuation_dB, ...
             'rtsim:FIRSpecification', '实际FIR通带或阻带响应未满足声明。');
     end
+
     validateattributes(fs, {'numeric'}, {'scalar', 'finite', 'positive'});
     validateattributes(cfg.sim.block_size, {'numeric'}, {'scalar', 'integer', 'positive'});
     validateattributes(cfg.radar.pulse_count, {'numeric'}, {'scalar', 'integer', 'positive'});

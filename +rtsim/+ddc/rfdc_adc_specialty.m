@@ -1,5 +1,6 @@
 function result = rfdc_adc_specialty(cfg)
     % 数微秒4GS/s实ADC专项；正RF复包络乘负NCO恢复，第二Nyquist区不额外共轭。
+
     arguments
         cfg.fc_Hz (1, 1) double = 2.8e9
         cfg.duration_s (1, 1) double = 4e-6
@@ -10,6 +11,7 @@ function result = rfdc_adc_specialty(cfg)
         cfg.seed (1, 1) double = 20260906
         cfg.quantization_enabled (1, 1) logical = true
     end
+
     assert(cfg.duration_s <= 20e-6 && cfg.duration_s > 0, 'rtsim:SpecialtyWindow', '专项只允许20us以内短窗。');
     assert(cfg.fc_Hz >= 2.7e9 && cfg.fc_Hz <= 3e9, 'rtsim:RFCarrier', 'RF载频范围2.7至3.0GHz。');
     fs = 4e9;
@@ -22,6 +24,7 @@ function result = rfdc_adc_specialty(cfg)
         lsb = 2 / 2^cfg.bits;
         adc = max(-1, min(1 - lsb, round(adc / lsb) * lsb));
     end
+
     mixed = adc .* exp(-1i * 2 * pi * cfg.fc_Hz * t);
     fir = rtsim.ddc.design_pl_filter(fs, d, 20e6);
     [out, ~] = rtsim.ddc.halfband_decimator(mixed, struct(), fir);

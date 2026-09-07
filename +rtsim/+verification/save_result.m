@@ -15,7 +15,9 @@ function outDir = save_result(result)
     report = struct('stage', result.stage, 'created_at', result.created_at, 'model_scope', result.model_scope, ...
         'observables', result.observables, 'diagnostics', result.diagnostics, 'scores', result.scores, ...
         'audit', result.audit, 'latency_ledger', result.latency_ledger, 'phase_ledger', result.phase_ledger);
+
     % 分开记录带宽、采样率和接口时钟，避免把采样栅格误读成距离分辨率。
+
     cfg = result.config;
     report.sampling = struct('adc_real_Hz', cfg.adc.fs_real_Hz, ...
         'rfdc_complex_Hz', cfg.rfdc.output_fs_Hz, 'rfdc_spc', cfg.rfdc.samples_per_clock, ...
@@ -30,9 +32,20 @@ function outDir = save_result(result)
     if isfield(result, 'frontend')
         report.frontend = result.frontend;
     end
+
+    if isfield(result, 'ota')
+        report.ota = rmfield(result.ota, 'pose_log');
+        report.array = result.array;
+        report.wideband_enabled = result.wideband_enabled;
+    end
+
     root = fileparts(fileparts(fileparts(mfilename('fullpath'))));
     sources = dir(fullfile(root, '**', '*.m'));
     sourcePaths = fullfile({sources.folder}, {sources.name});
+    if isfield(result, 'ota') && isfield(result.ota, 'source_file')
+        sourcePaths = [sourcePaths, reshape(cellstr(string(result.ota.source_file)), 1, [])];
+    end
+
     files = struct('paths', {sourcePaths}, 'project_root', root, 'out_dir', outDir);
     rtsim.verification.write_run_manifest(result.config, files, struct('matlab', version), ...
         struct('scenario', result.config.seed, 'calibration_train', result.config.seed + 1, ...
@@ -60,7 +73,14 @@ function outDir = save_result(result)
         result.observables.range_m, result.scores.range_error_m);
     fprintf(fid, '检测脉冲：%d；拒绝回放：%d；捕获丢失：%d；DMA 待传：%.0f 字节。\n\n', numel(result.pdw), ...
         result.diagnostics.rejected_replays, result.diagnostics.dropped_captures, result.diagnostics.dma_pending_bytes);
-    fprintf(fid, '结果仅用于算法参考。实测复方向图、板卡精确配置与实测校准资料缺失，对应资格为 BLOCKED_MISSING_DATA。\n');
+    if isfield(result, 'ota')
+        fprintf(fid, '目标参考面：%s；方向图：%s；完整Jones：%d；资料资格：%s。\n\n', ...
+            result.ota.target_reference_plane, result.ota.pattern_kind, ...
+            result.ota.has_full_jones, result.ota.quality_label);
+    end
+
+    fprintf(fid, ['结果用于算法验证。联合激励远场不能识别完整双端口Jones；' ...
+        '实测校准、板卡配置和硬件验收仍缺资料，不能据此宣布整机计量合格。\n']);
     clear closer;
     rtsim.verification.plot_result(result, fullfile(outDir, '仿真结果.png'));
 end

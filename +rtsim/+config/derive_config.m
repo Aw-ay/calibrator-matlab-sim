@@ -1,5 +1,6 @@
 function cfg = derive_config(cfg)
     % 秒参数是时序唯一来源；样点字段仅是本次运行的派生兼容视图。
+
     fs = cfg.pl.output_fs_Hz;
     validateattributes(cfg.pl.decimation, {'numeric'}, {'scalar', 'finite', 'integer', 'positive'});
     validateattributes(cfg.capture.max_pulse_s, {'numeric'}, {'scalar', 'real', 'finite', 'positive'});
@@ -21,6 +22,7 @@ function cfg = derive_config(cfg)
         validateattributes(cfg.capture.([name '_s']), {'numeric'}, {'scalar', 'real', 'finite', 'nonnegative'});
         cfg.capture.([name '_samples']) = round(cfg.capture.([name '_s']) * fs);
     end
+
     validateattributes(cfg.capture.end_hold_s, {'numeric'}, {'scalar', 'real', 'finite', 'positive'});
     validateattributes(cfg.capture.range_select_s, {'numeric'}, {'scalar', 'real', 'finite', 'nonnegative'});
     validateattributes(cfg.capture.rx_calibration_s, {'numeric'}, {'scalar', 'real', 'finite', 'nonnegative'});

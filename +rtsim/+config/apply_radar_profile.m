@@ -1,5 +1,6 @@
 function cfg = apply_radar_profile(cfg, profile)
     % 雷达任务与采样实现可独立选择。
+
     switch upper(char(profile))
         case {'SMOKE', 'ALGORITHM_SMOKE'}
             values = [10e-6, 1e6, 1e3, 4];
@@ -16,6 +17,7 @@ function cfg = apply_radar_profile(cfg, profile)
         otherwise
             error('rtsim:RadarProfile', '未知雷达模式：%s', profile);
     end
+
     cfg.radar.profile = upper(char(profile));
     cfg.radar.pulse_width_s = values(1);
     cfg.radar.bandwidth_Hz = values(2);

@@ -3,6 +3,8 @@ function patterns = load_pattern_config(cfgPattern)
 
     kind = upper(string(cfgPattern.kind));
     switch kind
+        case 'CST_FARFIELD'
+            patterns = rtsim.pattern.load_farfield_pattern(cfgPattern);
         case "IDEAL"
             patterns = struct('kind', 'IDEAL', 'raw', cfgPattern, 'has_phase', true, ...
                 'has_full_jones', true, 'az_range_deg', [-180, 180], 'el_range_deg', [-90, 90], ...

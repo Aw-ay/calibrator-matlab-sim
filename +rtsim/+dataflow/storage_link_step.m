@@ -18,6 +18,7 @@ function [saved, sent, st, diag] = storage_link_step(records, st, storageCfg, ra
     end
 
     % PDW优先，保证IQ策略或容量压力不会吞掉全部事件记录。
+
     isPdw = arrayfun(@(r) r.kind == "PDW", records);
     ordered = [records(isPdw) records(~isPdw)];
     saved = struct([]);

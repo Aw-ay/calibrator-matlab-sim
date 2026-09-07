@@ -33,7 +33,22 @@ function [navObservations, st] = nav_sensor_step(truth, st, sensorCfg)
     navObservations.available_time_s = truth.time_s + sensorCfg.delay_s;
     navObservations.position_m = truth.position_m + positionBias + positionNoise;
     navObservations.velocity_mps = truth.velocity_mps + velocityBias;
-    navObservations.roll_deg = truth.roll_deg + sensorCfg.roll_bias_deg;
+    axes = {'roll', 'pitch', 'yaw'};
+    for k = 1:3
+        axis = axes{k};
+        navObservations.([axis '_deg']) = value_or(truth, [axis '_deg'], 0) + ...
+            value_or(sensorCfg, [axis '_bias_deg'], 0);
+        if isfield(truth, [axis '_rate_dps'])
+            navObservations.([axis '_rate_dps']) = truth.([axis '_rate_dps']) + ...
+                value_or(sensorCfg, [axis '_rate_bias_dps'], 0);
+        end
+    end
+
+    if isfield(truth, 'angular_rate_body_rps')
+        navObservations.angular_rate_body_rps = truth.angular_rate_body_rps(:) + ...
+            reshape(value_or(sensorCfg, 'angular_rate_bias_body_rps', [0 0 0]), 3, 1);
+    end
+
     navObservations.quality = double(logical(sensorCfg.available));
     navObservations.available = logical(sensorCfg.available);
     navObservations.model_scope = "biased delayed navigation observation";
@@ -46,4 +61,12 @@ function value = preserveShape(value, reference, fieldName)
     end
 
     value = reshape(value, size(reference));
+end
+
+function v = value_or(s, n, d)
+    if isfield(s, n)
+        v = s.(n);
+    else
+        v = d;
+    end
 end

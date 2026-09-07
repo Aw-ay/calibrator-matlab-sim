@@ -27,6 +27,7 @@ function [measurement, st, diag] = tx_monitor_step(tap, st, monitorCfg, clockTru
     end
 
     % 每个样点固定抽取 H-I、H-Q、V-I、V-Q，保证任意分块得到相同随机序列。
+
     n = size(tap, 1);
     draws = reshape(randn(stream, 4 * n, 1), 4, n).';
     noise = monitorCfg.noise_std / sqrt(2) * complex(draws(:, [1 3]), draws(:, [2 4]));

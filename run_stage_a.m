@@ -6,6 +6,7 @@ function result = run_stage_a(cfg)
     end
 
     assert(all(cfg.platform.velocity_mps == 0) && all(cfg.platform.acceleration_mps2 == 0) && ...
-        cfg.platform.roll_rate_dps == 0, 'rtsim:StageAStatic', '阶段 A 必须为固定平台。');
+        cfg.platform.roll_rate_dps == 0 && cfg.platform.pitch_rate_dps == 0 && ...
+        cfg.platform.yaw_rate_dps == 0, 'rtsim:StageAStatic', '阶段 A 必须为固定平台。');
     result = rtsim.sim.simulate_case(cfg, 'A', []);
 end

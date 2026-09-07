@@ -1,5 +1,6 @@
 function cfg = design_pl_filter(fs, decimation, bandwidth)
     % 基础 MATLAB 的 Blackman 窗低通；正式档通带±10M、阻带31.25M起。
+
     if decimation == 1
         h = 1;
     else
@@ -16,6 +17,7 @@ function cfg = design_pl_filter(fs, decimation, bandwidth)
         h = h .* w;
         h = h / sum(h);
     end
+
     cfg = struct('coefficients', h, 'decimation', decimation, 'passband_Hz', bandwidth / 2, ...
         'stopband_Hz', fs / decimation / 2, 'max_passband_ripple_dB', 0.1, 'min_stopband_attenuation_dB', 60);
 end
